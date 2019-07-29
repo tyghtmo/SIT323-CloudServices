@@ -24,18 +24,18 @@ namespace SIT323Assignment1
 
         private void openTANFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
-            if (result == DialogResult.OK) // Test result.
+            openTANFile();
+        }
+
+        private void openTANFile()
+        {
+            DialogResult result;
+
+            result = openFileDialog1.ShowDialog();
+            if(result == DialogResult.OK)
             {
-                string file = openFileDialog1.FileName;
-                try
-                {
-                    string text = File.ReadAllText(file);
-                    size = text.Length;
-                }
-                catch (IOException)
-                {
-                }
+                //TODO .tan opening
+                TaskAllocations.TryParse(openFileDialog1.FileName, out TaskAllocations aTaskAllocation);
             }
         }
     }

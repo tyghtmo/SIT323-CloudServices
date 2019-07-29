@@ -38,6 +38,7 @@
             this.errorListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutAllocationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -66,14 +67,14 @@
             // openTANFileToolStripMenuItem
             // 
             this.openTANFileToolStripMenuItem.Name = "openTANFileToolStripMenuItem";
-            this.openTANFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openTANFileToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.openTANFileToolStripMenuItem.Text = "Open TAN File";
             this.openTANFileToolStripMenuItem.Click += new System.EventHandler(this.openTANFileToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // validateToolStripMenuItem
@@ -119,6 +120,10 @@
             this.aboutAllocationsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.aboutAllocationsToolStripMenuItem.Text = "About Allocations";
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -148,6 +153,7 @@
         private System.Windows.Forms.ToolStripMenuItem errorListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutAllocationsToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 

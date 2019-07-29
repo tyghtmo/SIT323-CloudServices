@@ -82,7 +82,6 @@ namespace SIT323Assignment1
             if(allocation.ID < 0)
             {
                 isValid = false;
-                return isValid;
             }
 
             int rows = allocation.AllocationMatrix.GetLength(0);
@@ -100,7 +99,7 @@ namespace SIT323Assignment1
                 if(columnSum != 1)
                 {
                     isValid = false;
-                    return isValid;
+                    break;
                 }
             }
 
