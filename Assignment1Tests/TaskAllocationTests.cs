@@ -61,8 +61,6 @@ namespace Assignment1Tests
         {
             //Arrange
             int expectedAllocations = 8;
-            int[,] expectedMatrix1 = { { 1, 1, 0, 0, 0 }, { 0, 0, 1, 1, 0 }, { 0, 0, 0, 0, 1 } };
-            Allocation expected1 = new Allocation(1, expectedMatrix1);
 
             //Act
             TaskAllocations test = new TaskAllocations(test1FilePath);

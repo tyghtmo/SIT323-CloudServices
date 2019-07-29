@@ -68,6 +68,7 @@
             this.openTANFileToolStripMenuItem.Name = "openTANFileToolStripMenuItem";
             this.openTANFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openTANFileToolStripMenuItem.Text = "Open TAN File";
+            this.openTANFileToolStripMenuItem.Click += new System.EventHandler(this.openTANFileToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
@@ -87,7 +88,7 @@
             // 
             this.allocationsToolStripMenuItem.Enabled = false;
             this.allocationsToolStripMenuItem.Name = "allocationsToolStripMenuItem";
-            this.allocationsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.allocationsToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.allocationsToolStripMenuItem.Text = "Allocations";
             // 
             // viewToolStripMenuItem
@@ -101,7 +102,7 @@
             // errorListToolStripMenuItem
             // 
             this.errorListToolStripMenuItem.Name = "errorListToolStripMenuItem";
-            this.errorListToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.errorListToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.errorListToolStripMenuItem.Text = "Error List";
             // 
             // helpToolStripMenuItem
@@ -115,7 +116,7 @@
             // aboutAllocationsToolStripMenuItem
             // 
             this.aboutAllocationsToolStripMenuItem.Name = "aboutAllocationsToolStripMenuItem";
-            this.aboutAllocationsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutAllocationsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.aboutAllocationsToolStripMenuItem.Text = "About Allocations";
             // 
             // Form1
