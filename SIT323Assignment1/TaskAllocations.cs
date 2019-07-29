@@ -36,12 +36,18 @@ namespace SIT323Assignment1
         public int Processors { get; set; }
         public int NumAllocations { get; set; }
         public List<Allocation> SetOfAllocations { get; set; }
+
+        //Errors
+        public List<String> AllocationErrorList= new List<string>();
+
+        //Filename
+        public string taskAllocationPath { get; set; }
         #endregion
 
         #region Constructers
         public TaskAllocations(string filePath)
         {
-            ConfigPath = filePath;
+            taskAllocationPath = filePath;
         }
         #endregion
 
@@ -78,7 +84,7 @@ namespace SIT323Assignment1
         public static Boolean TryParse(string path, out TaskAllocations anAllocation)
         {
             anAllocation = new TaskAllocations(path);
-            List<String> ErrorList = new List<string>();
+            List<String> ParsingErrorList = new List<string>();
             anAllocation.SetOfAllocations = new List<Allocation>();
 
             //Begin parsing TAN file
@@ -97,7 +103,7 @@ namespace SIT323Assignment1
                     else
                     {
                         string error = invalidLineError + line;
-                        ErrorList.Add(error);
+                        ParsingErrorList.Add(error);
                     }
                 }
                 else if (line.Contains(anAllocation.configPathKey))
@@ -123,7 +129,7 @@ namespace SIT323Assignment1
                     if(input == -1)
                     {
                         string error = stringToIntError + line;
-                        ErrorList.Add(error);
+                        ParsingErrorList.Add(error);
                     }
                     else
                     {
@@ -139,7 +145,7 @@ namespace SIT323Assignment1
                     if (input == -1)
                     {
                         string error = stringToIntError + line;
-                        ErrorList.Add(error);
+                        ParsingErrorList.Add(error);
                     }
                     else
                     {
@@ -153,7 +159,7 @@ namespace SIT323Assignment1
                     if (input == -1)
                     {
                         string error = stringToIntError + line;
-                        ErrorList.Add(error);
+                        ParsingErrorList.Add(error);
                     }
                     else
                     {
@@ -167,7 +173,7 @@ namespace SIT323Assignment1
                     if (id == -1)
                     {
                         string error = stringToIntError + line;
-                        ErrorList.Add(error);
+                        ParsingErrorList.Add(error);
                     }
                     
                     List<String> allocationMatrix = new List<string>();
@@ -190,7 +196,7 @@ namespace SIT323Assignment1
                 else
                 {
                     string error = invalidLineError + line;
-                    ErrorList.Add(error);
+                    ParsingErrorList.Add(error);
                 }
             }
             file.Close();
@@ -201,7 +207,7 @@ namespace SIT323Assignment1
             if (noAllocations != expectedAllocations)
             {
                 string error = string.Format(diffNoAllocationToExpectedError, noAllocations, expectedAllocations);
-                ErrorList.Add(error);
+                ParsingErrorList.Add(error);
             }
 
             //Test that allocations are valid
@@ -211,11 +217,14 @@ namespace SIT323Assignment1
                 {
                     string error = invalidAllocationError;
                     error = error + a.ToString();
-                    ErrorList.Add(error);
+                    ParsingErrorList.Add(error);
                 }
             }
 
-            return ErrorList.Count == 0;
+            //Add parsing errors to instance error list
+            anAllocation.AllocationErrorList.AddRange(ParsingErrorList);
+     
+            return ParsingErrorList.Count == 0;
         }
         #endregion
     }

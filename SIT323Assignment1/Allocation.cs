@@ -67,9 +67,14 @@ namespace SIT323Assignment1
                 {
                     str = str + AllocationMatrix[i,j] + ",";
                 }
+
+                //Remove last , 
                 str = str.Substring(0, str.Length - 1);
                 str = str + "\n";
             }
+
+            //Remove last \n 
+            str = str.Substring(0, str.Length - 1);
 
             return str;
         }

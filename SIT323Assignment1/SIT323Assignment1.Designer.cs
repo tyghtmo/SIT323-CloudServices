@@ -1,6 +1,6 @@
 ﻿namespace SIT323Assignment1
 {
-    partial class Form1
+    partial class SIT323Assignment1Form
     {
         /// <summary>
         /// Required designer variable.
@@ -69,7 +69,7 @@
             this.openTANFileToolStripMenuItem.Name = "openTANFileToolStripMenuItem";
             this.openTANFileToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.openTANFileToolStripMenuItem.Text = "Open TAN File";
-            this.openTANFileToolStripMenuItem.Click += new System.EventHandler(this.openTANFileToolStripMenuItem_Click);
+            this.openTANFileToolStripMenuItem.Click += new System.EventHandler(this.OpenTANFileToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
@@ -103,8 +103,9 @@
             // errorListToolStripMenuItem
             // 
             this.errorListToolStripMenuItem.Name = "errorListToolStripMenuItem";
-            this.errorListToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.errorListToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.errorListToolStripMenuItem.Text = "Error List";
+            this.errorListToolStripMenuItem.Click += new System.EventHandler(this.errorListToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -132,7 +133,7 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "SIT323 Assignment 1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
