@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SIT323Assignment1
@@ -16,8 +16,10 @@ namespace SIT323Assignment1
         private const string emptySpace = "";
 
         //Errors
+        private const string missingKeyError = "File is missing a key: ";
         private const string invalidLineError = "Invalid line in file: ";
         private const string stringToIntError = "String to Int error: ";
+        private const string missingSeperatorError = "Invalid seperator: ";
         private const string invalidAllocationError = "Invalid Allocation: ";
         private const string diffNoAllocationToExpectedError = "Different number of Allocations than expected. {0} of {1} expected";
         #endregion
@@ -38,6 +40,7 @@ namespace SIT323Assignment1
         public List<Allocation> SetOfAllocations { get; set; }
 
         //Errors
+        public Boolean isValid;
         public List<String> AllocationErrorList= new List<string>();
 
         //Filename
@@ -66,6 +69,47 @@ namespace SIT323Assignment1
 
         }
 
+        public Boolean Validate()
+        {
+
+            StreamReader file = new StreamReader(taskAllocationPath);
+            string tanContents = file.ReadToEnd();
+
+            //Check file contains all keys
+            if (!tanContents.Contains(configPathKey))
+            {
+                AllocationErrorList.Add(missingKeyError + configPathKey);
+            }
+
+            if (!tanContents.Contains(tasksKey))
+            {
+                AllocationErrorList.Add(missingKeyError + tasksKey);
+            }
+
+            if (!tanContents.Contains(processorsKey))
+            {
+                AllocationErrorList.Add(missingKeyError + processorsKey);
+            }
+
+            if (!tanContents.Contains(allocationsKey))
+            {
+                AllocationErrorList.Add(missingKeyError + allocationsKey);
+            }
+
+            //TODO: Check No. of Allocations is correct
+            Regex allocationRegex = new Regex(@"ALLOCATIONS,\d+");
+            MatchCollection allocationMatch = allocationRegex.Matches(tanContents);
+            string[] substrings = allocationMatch[0].Value.Split(delimiter);
+            string numberOfAllocations = substrings[1];
+
+
+            //TODO: Validate allocations
+
+            //TODO: Check filename is valid
+            return true;
+        }
+
+
         /// <summary>
         /// Determines if a .tan file is valid and parses the data to an instance of TaskAllocation
         /// </summary>
@@ -83,9 +127,13 @@ namespace SIT323Assignment1
         /// </returns>
         public static Boolean TryParse(string path, out TaskAllocations anAllocation)
         {
+            
             anAllocation = new TaskAllocations(path);
             List<String> ParsingErrorList = new List<string>();
             anAllocation.SetOfAllocations = new List<Allocation>();
+
+            //TODO: Check validity first
+            Boolean isValid = anAllocation.Validate();
 
             //Begin parsing TAN file
             StreamReader file = new StreamReader(path);
@@ -118,7 +166,7 @@ namespace SIT323Assignment1
                     }
                     else
                     {
-                        //TODO errors
+                        ParsingErrorList.Add(invalidLineError + line);
                     }
                 }
                 else if (line.Contains(anAllocation.tasksKey))
@@ -126,11 +174,7 @@ namespace SIT323Assignment1
                     string[] substrings = line.Split(delimiter);
                     int input = ToInt32(substrings[1]);
 
-                    if(input == -1)
-                    {
-                        string error = stringToIntError + line;
-                        ParsingErrorList.Add(error);
-                    }
+                    if(input == -1) ParsingErrorList.Add(stringToIntError + line);
                     else
                     {
                         anAllocation.Tasks = input;
