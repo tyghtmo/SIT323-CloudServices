@@ -17,6 +17,7 @@ namespace SIT323Assignment1
 
         //Errors
         private const string missingKeyError = "File is missing a key: ";
+        private const string multipleKeyError = "File contains multiple keys: ";
         private const string invalidLineError = "Invalid line in file: ";
         private const string stringToIntError = "String to Int error: ";
         private const string missingSeperatorError = "Invalid seperator: ";
@@ -76,37 +77,88 @@ namespace SIT323Assignment1
             string tanContents = file.ReadToEnd();
 
             //Check file contains all keys
-            if (!tanContents.Contains(configPathKey))
+            Regex configPathRegex = new Regex(@"CONFIG-FILE,.+");
+            MatchCollection configPathMatch = configPathRegex.Matches(tanContents);
+            if (configPathMatch.Count == 0)
             {
                 AllocationErrorList.Add(missingKeyError + configPathKey);
             }
+            if(configPathMatch.Count > 1)
+            {
+                AllocationErrorList.Add(multipleKeyError + configPathKey);
+            }
 
-            if (!tanContents.Contains(tasksKey))
+            Regex tasksRegex = new Regex(@"TASKS,\d+");
+            MatchCollection tasksMatch = tasksRegex.Matches(tanContents);
+            if (tasksMatch.Count == 0)
             {
                 AllocationErrorList.Add(missingKeyError + tasksKey);
             }
+            if (tasksMatch.Count > 1)
+            {
+                AllocationErrorList.Add(multipleKeyError + tasksKey);
+            }
 
-            if (!tanContents.Contains(processorsKey))
+            Regex processorsRegex = new Regex(@"PROCESSORS,\d+");
+            MatchCollection processorsMatch = processorsRegex.Matches(tanContents);
+            if (processorsMatch.Count == 0)
             {
                 AllocationErrorList.Add(missingKeyError + processorsKey);
             }
+            if (processorsMatch.Count > 1)
+            {
+                AllocationErrorList.Add(multipleKeyError + processorsKey);
+            }
 
-            if (!tanContents.Contains(allocationsKey))
+            Regex allocationRegex = new Regex(@"ALLOCATIONS,\d+");
+            MatchCollection allocationMatch = allocationRegex.Matches(tanContents);
+            if (allocationMatch.Count == 0)
             {
                 AllocationErrorList.Add(missingKeyError + allocationsKey);
             }
+            if (allocationMatch.Count > 1)
+            {
+                AllocationErrorList.Add(multipleKeyError + allocationsKey);
+            }
 
-            //TODO: Check No. of Allocations is correct
-            Regex allocationRegex = new Regex(@"ALLOCATIONS,\d+");
-            MatchCollection allocationMatch = allocationRegex.Matches(tanContents);
-            string[] substrings = allocationMatch[0].Value.Split(delimiter);
-            string numberOfAllocations = substrings[1];
+            //Check No. of Allocations is correct
+            string line = "";
+            int expectedAllocations = -1;
+
+            if (allocationMatch.Count > 0)
+            {
+                line = allocationMatch[0].Value;
+                string[] substrings = line.Split(delimiter);
+                expectedAllocations = ToInt32(substrings[1]);
+                if (expectedAllocations == -1) AllocationErrorList.Add(stringToIntError + line);
+
+                Regex allocationIDRegex = new Regex(@"ALLOCATION-ID,\d+");
+                MatchCollection allocationIDMatch = allocationIDRegex.Matches(tanContents);
+                int actualAllocations = allocationIDMatch.Count;
 
 
-            //TODO: Validate allocations
+                if (expectedAllocations != actualAllocations)
+                {
+                    AllocationErrorList.Add(string.Format(diffNoAllocationToExpectedError, actualAllocations, expectedAllocations));
+                }
+            }  
 
-            //TODO: Check filename is valid
-            return true;
+            //Validate allocations
+            foreach (Allocation a in SetOfAllocations)
+            {
+                if (!Allocation.ValidateAllocation(a))
+                {
+                    string error = invalidAllocationError;
+                    error = error + a.ToString();
+                    AllocationErrorList.Add(error);
+                }
+            }
+
+            //Check filename is valid
+            Regex tanFileRegex = new Regex(@".+\.tan$");
+            MatchCollection tanFileMatch = tanFileRegex.Matches(taskAllocationPath);
+
+            return (AllocationErrorList.Count == 0);
         }
 
 
@@ -131,9 +183,6 @@ namespace SIT323Assignment1
             anAllocation = new TaskAllocations(path);
             List<String> ParsingErrorList = new List<string>();
             anAllocation.SetOfAllocations = new List<Allocation>();
-
-            //TODO: Check validity first
-            Boolean isValid = anAllocation.Validate();
 
             //Begin parsing TAN file
             StreamReader file = new StreamReader(path);
@@ -245,29 +294,12 @@ namespace SIT323Assignment1
             }
             file.Close();
 
-            //Test that number of allocations is correct
-            int noAllocations = anAllocation.SetOfAllocations.Count;
-            int expectedAllocations = anAllocation.NumAllocations;
-            if (noAllocations != expectedAllocations)
-            {
-                string error = string.Format(diffNoAllocationToExpectedError, noAllocations, expectedAllocations);
-                ParsingErrorList.Add(error);
-            }
-
-            //Test that allocations are valid
-            foreach(Allocation a in anAllocation.SetOfAllocations)
-            {
-                if (!Allocation.ValidateAllocation(a))
-                {
-                    string error = invalidAllocationError;
-                    error = error + a.ToString();
-                    ParsingErrorList.Add(error);
-                }
-            }
-
             //Add parsing errors to instance error list
             anAllocation.AllocationErrorList.AddRange(ParsingErrorList);
-     
+
+            //Check validity of file
+            anAllocation.isValid = anAllocation.Validate();
+
             return ParsingErrorList.Count == 0;
         }
         #endregion

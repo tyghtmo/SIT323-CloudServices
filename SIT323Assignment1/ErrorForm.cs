@@ -36,5 +36,6 @@ namespace SIT323Assignment1
             string errorText = strBuild.ToString();
             label1.Text = errorText;
         }
+
     }
 }

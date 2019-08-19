@@ -34,8 +34,10 @@ namespace SIT323Assignment1
 
         private void OpenTANFile()
         {
-            DialogResult result;
+            //Clear any residual errors
+            CompleteErrorList.Clear();
 
+            DialogResult result;
             result = openFileDialog1.ShowDialog();
             if(result == DialogResult.OK)
             {

@@ -15,9 +15,9 @@ namespace SIT323Assignment1
         static void Main()
         {
             
-            string filePath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test3.tan";
-            TaskAllocations test = new TaskAllocations(filePath);
-            Boolean valid = test.Validate();
+            //string filePath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test1.tan";
+            //TaskAllocations test = new TaskAllocations(filePath);
+            //Boolean valid = test.Validate();
             
 
             Application.EnableVisualStyles();

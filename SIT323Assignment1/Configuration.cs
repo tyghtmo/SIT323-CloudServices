@@ -75,5 +75,23 @@ namespace SIT323Assignment1
             ConfigurationFilePath = path;
         }
         #endregion
+
+        #region Methods
+
+        public Boolean Validate()
+        {
+            //TODO
+            return true;
+        }
+
+        public static Boolean TryParse(string path, out Configuration aConfiguration)
+        {
+            aConfiguration = new Configuration(path);
+
+            //TODO
+            return true;
+        }
+
+        #endregion
     }
 }
