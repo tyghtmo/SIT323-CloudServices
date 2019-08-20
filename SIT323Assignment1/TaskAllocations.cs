@@ -56,6 +56,11 @@ namespace SIT323Assignment1
         {
             taskAllocationPath = filePath;
         }
+
+        public TaskAllocations()
+        {
+
+        }
         #endregion
 
         #region Methods
@@ -158,7 +163,7 @@ namespace SIT323Assignment1
             foreach (Allocation a in SetOfAllocations)
             {
                 a.ValidateAllocation(out allocationErrors);
-                if (!a.isValid) AllocationErrorList.Add(invalidAllocationError + a.ToString());
+                if (!a.isValid) AllocationErrorList.Add(invalidAllocationError + a.ID);
                 AllocationErrorList.AddRange(allocationErrors);
                 /*
                 if (!Allocation.ValidateAllocation(a, out allocationErrors))

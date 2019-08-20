@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SIT323Assignment1
 {
-    class Configuration
+    public class Configuration
     {
         #region Constants
         private const char delimiter = ',';

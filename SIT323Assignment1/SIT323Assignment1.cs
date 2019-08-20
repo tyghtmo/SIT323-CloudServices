@@ -16,6 +16,9 @@ namespace SIT323Assignment1
 
         private ErrorForm errorForm { get; set; }
         public static List<string> CompleteErrorList = new List<string>();
+        private TaskAllocations aTaskAllocation = new TaskAllocations();
+        private Configuration aConfiguration = new Configuration();
+        string fileValiditys = "";
 
         public SIT323Assignment1Form()
         {
@@ -38,6 +41,7 @@ namespace SIT323Assignment1
             //Clear any residual errors
             CompleteErrorList.Clear();
             label1.Text = "";
+            fileValiditys = "";
 
             DialogResult result;
             result = openFileDialog1.ShowDialog();
@@ -45,12 +49,12 @@ namespace SIT323Assignment1
             {
                 //Process TAN file
                 CompleteErrorList.Add("START PROCESSING TAN FILE: " + openFileDialog1.SafeFileName);
-                TaskAllocations.TryParse(openFileDialog1.FileName, out TaskAllocations aTaskAllocation);
+                TaskAllocations.TryParse(openFileDialog1.FileName, out aTaskAllocation);
                 if (aTaskAllocation.AllocationErrorList != null) UpdateErrors(aTaskAllocation.AllocationErrorList);
                 CompleteErrorList.Add("END PROCESSING TAN FILE: " + openFileDialog1.SafeFileName);
 
-                if (aTaskAllocation.isValid) label1.Text = "TAN file is valid\n\n";
-                else label1.Text = "TAN file is invalid\n\n";
+                if (aTaskAllocation.isValid) fileValiditys += "TAN file is valid\n\n";
+                else fileValiditys += "TAN file is invalid\n\n";
 
 
                 //TODO get rid of this test
@@ -62,12 +66,11 @@ namespace SIT323Assignment1
                 if (aTaskAllocation.ConfigPath == null)
                 {
                     configPath = "File Name Missing";
-                    label1.Text += "Configuration file is invalid\n\n";
+                    fileValiditys += "Configuration file is invalid\n\n";
                 }
                 else configPath = aTaskAllocation.ConfigPath;
                         
                 CompleteErrorList.Add("START PROCESSING CONFIG FILE: " + configPath);
-                Configuration aConfiguration = new Configuration();
                 if (aTaskAllocation.ConfigPath != null)
                 {
                     //Get directory of TAN file and add config path
@@ -77,16 +80,26 @@ namespace SIT323Assignment1
                     Configuration.TryParse(configFullPath, out aConfiguration);
                     if (aConfiguration.ConfigurationErrorList != null) UpdateErrors(aConfiguration.ConfigurationErrorList);
 
-                    if (aTaskAllocation.isValid) label1.Text += "Configuration file is valid\n\n";
-                    else label1.Text += "Configuration file is invalid\n\n";
+                    if (aTaskAllocation.isValid) fileValiditys += "Configuration file is valid\n\n";
+                    else fileValiditys += "Configuration file is invalid\n\n";
                 }
                 CompleteErrorList.Add("END PROCESSING CONFIG FILE: " + configPath);
 
-                //Calculate allocations
+                if(aTaskAllocation.isValid == true && aConfiguration.isValid == true)
+                {
+                    allocationsToolStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    allocationsToolStripMenuItem.Enabled = false;
+                }
+
+                //Update text
+                label1.Text = "";
+                label1.Text += fileValiditys;
                 foreach (Allocation al in aTaskAllocation.SetOfAllocations)
                 {
-                    double time = al.CalculateTime(aConfiguration.RuntimeReferenceFrequency, aConfiguration.TaskRuntimes, aConfiguration.ProcessorFrequencies);
-                    label1.Text += string.Format("Allocation ID:{0}, Time:{1:0.00}, Energy:{2:0.00}\n", al.ID, time, time);
+                    label1.Text += string.Format("Allocation ID: {0}\n", al.ID);
                     label1.Text += al.MatrixToString();
                 }
             }
@@ -100,23 +113,47 @@ namespace SIT323Assignment1
 
         private void UpdateErrors(List<string> errors)
         {
-            
-            int errorCounter = 1;
-            foreach (string str in errors)
+            if (errors.Count > 0)
             {
-                StringBuilder strBuild = new StringBuilder();
-                strBuild.Append("Error ");
-                strBuild.Append(errorCounter);
-                strBuild.Append(": ");
-                strBuild.Append(str);
-                CompleteErrorList.Add(strBuild.ToString());
-                errorCounter++;
+                int errorCounter = 1;
+                foreach (string str in errors)
+                {
+                    StringBuilder strBuild = new StringBuilder();
+                    strBuild.Append("Error ");
+                    strBuild.Append(errorCounter);
+                    strBuild.Append(": ");
+                    strBuild.Append(str);
+                    CompleteErrorList.Add(strBuild.ToString());
+                    errorCounter++;
+                }
             }
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
 
+        private void allocationsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            label1.Text = "";
+            label1.Text += fileValiditys;
+            //Calculate allocations
+            CompleteErrorList.Add("START PROCESSING ALLOCATIONS:");
+            foreach (Allocation al in aTaskAllocation.SetOfAllocations)
+            {
+                List<string> errors = new List<string>();
+
+                //get time
+                double time = al.CalculateTime(aConfiguration, out errors);
+                string timeString = time.ToString("0.00");
+
+                //get energy
+                double energy = al.CalculateEnergy(aConfiguration, out errors);
+                string energyString = energy.ToString("0.00");
+
+                //update text
+                UpdateErrors(errors);
+                label1.Text += string.Format("Allocation ID: {0}, Time: {1:0.00}, Energy: {2:0.00}\n", al.ID, timeString, energyString);
+                label1.Text += al.MatrixToString();
+            }
+            CompleteErrorList.Add("END PROCESSING ALLOCATIONS: ");
         }
     }
 }

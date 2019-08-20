@@ -90,8 +90,9 @@
             // 
             this.allocationsToolStripMenuItem.Enabled = false;
             this.allocationsToolStripMenuItem.Name = "allocationsToolStripMenuItem";
-            this.allocationsToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.allocationsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.allocationsToolStripMenuItem.Text = "Allocations";
+            this.allocationsToolStripMenuItem.Click += new System.EventHandler(this.allocationsToolStripMenuItem_Click);
             // 
             // viewToolStripMenuItem
             // 
@@ -135,7 +136,6 @@
             this.label1.Size = new System.Drawing.Size(46, 18);
             this.label1.TabIndex = 1;
             this.label1.Text = "label1";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // SIT323Assignment1Form
             // 

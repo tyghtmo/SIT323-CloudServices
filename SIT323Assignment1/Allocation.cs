@@ -11,11 +11,13 @@ namespace SIT323Assignment1
         #region Properties
         public int ID { get; set; }
         public int[,] AllocationMatrix { get; set; }
+        public Dictionary<int, double> processorTimes = new Dictionary<int, double>();
 
 
         private const string invalidIDError = "Invalid ID on Allocation with ID: ";
         private const string multipleAllocationError = "A task ID: {0} in allocation ID: {1} has been allocated to {2} processors instead of 1";
-        private const string noAllocationError = "Task ID:{0} in allocation ID:{1} is not allocated to any processor";
+        private const string noAllocationError = "Task ID: {0} in allocation ID: {1} is not allocated to any processor";
+        private const string exceedMaxRuntimeError = "Allocation ID: {0}'s runtime is {1:0.00} seconds which is greater than the max runtime of {2} seconds";
 
         public bool isValid = true;
         #endregion
@@ -150,45 +152,59 @@ namespace SIT323Assignment1
             return isValid;
         }
 
-        public double CalculateTime(int refFrequency, Dictionary<int, int> taskRuntimes, Dictionary<int, double> ProcessorFrequencies)
+        public double CalculateTime(Configuration aconfiguration, out List<string> errors)
         {
+            errors = new List<string>();
             double time = 0;
             int[,] runtimeMatrix = AllocationMatrix.Clone() as int[,];
             int rows = runtimeMatrix.GetLength(0);
             int columns = runtimeMatrix.GetLength(1);
 
-
-            foreach (KeyValuePair<int, int> task in taskRuntimes)
+            //add runtimes to allocation matrix
+            if (aconfiguration.TaskRuntimes != null)
             {
-                for (int processors = 0; processors < rows; processors++)
+                foreach (KeyValuePair<int, int> task in aconfiguration.TaskRuntimes)
                 {
-                   if(runtimeMatrix[processors, (task.Key - 1)] == 1)
+                    for (int processors = 0; processors < rows; processors++)
                     {
-                        runtimeMatrix[processors, task.Key- 1] = task.Value;
+                        if (runtimeMatrix[processors, (task.Key - 1)] == 1)
+                        {
+                            runtimeMatrix[processors, task.Key - 1] = task.Value;
+                        }
                     }
                 }
-            }
 
-            //int rows = AllocationMatrix.GetLength(0);
-            // int columns = AllocationMatrix.GetLength(1);
-            for (int processors = 0; processors < rows; processors++)
-            {
-                int rowSum = 0;
-                for (int tasks = 0; tasks < columns; tasks++)
+                //Calculate time for each processor
+                for (int processors = 0; processors < rows; processors++)
                 {
-                    rowSum += runtimeMatrix[processors, tasks];
+                    int rowSum = 0;
+                    for (int tasks = 0; tasks < columns; tasks++)
+                    {
+                        rowSum += runtimeMatrix[processors, tasks];
+                    }
+                    double processorTime = rowSum * (aconfiguration.RuntimeReferenceFrequency / aconfiguration.ProcessorFrequencies[processors + 1]);
+                    processorTimes.Add(processors + 1, processorTime);
+                    if (processorTime > time) time = processorTime;
                 }
-                double processorTime = rowSum * (refFrequency / ProcessorFrequencies[processors + 1]);
-                if (processorTime > time) time = processorTime;
             }
-
+            if (time > aconfiguration.ProgramMaxDuration) errors.Add(string.Format(exceedMaxRuntimeError, ID, time, aconfiguration.ProgramMaxDuration));
             return time;
         }
 
-        public double CalculateEnergy()
+        public double CalculateEnergy(Configuration aConfiguration, out List<string> errors)
         {
+            errors = new List<string>();
             double energy = 0;
+            double c0 = aConfiguration.CoefficientValues[0];
+            double c1 = aConfiguration.CoefficientValues[1];
+            double c2 = aConfiguration.CoefficientValues[2];
 
+            foreach(KeyValuePair<int, double> time in processorTimes)
+            {
+                double f = aConfiguration.ProcessorFrequencies[time.Key];
+                energy += time.Value * (c2 * (f * f) + c1 * f + c0);
+            }
+            //TODO energy not same error
 
             return energy;
         }
