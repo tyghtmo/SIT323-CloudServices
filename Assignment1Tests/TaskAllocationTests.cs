@@ -10,7 +10,7 @@ namespace Assignment1Tests
         const string test1FilePath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test1.tan";
 
         [TestMethod]
-        public void TestMethod1()
+        public void ConfigFileTest()
         {
             //Arrange
             string expectedConfigFile = "Test1.csv";
@@ -26,7 +26,7 @@ namespace Assignment1Tests
         }
 
         [TestMethod]
-        public void TestMethod2()
+        public void TasksTest()
         {
             //Arrange
             int expectedTasks = 5;
@@ -41,7 +41,7 @@ namespace Assignment1Tests
         }
 
         [TestMethod]
-        public void TestMethod3()
+        public void ProcessorsTest()
         {
             //Arrange
             int expectedProcessors = 3;
@@ -57,7 +57,7 @@ namespace Assignment1Tests
         }
 
         [TestMethod]
-        public void TestMethod4()
+        public void AllocationsTest()
         {
             //Arrange
             int expectedAllocations = 8;
@@ -73,7 +73,7 @@ namespace Assignment1Tests
         }
 
         [TestMethod]
-        public void TestMethod5()
+        public void AllocationID1Test()
         {
             //Arrange
             int expectedID = 1;
@@ -92,7 +92,7 @@ namespace Assignment1Tests
         }
 
         [TestMethod]
-        public void TestMethod6()
+        public void AllocationID2Test()
         {
             //Arrange
             int expectedID = 2;
@@ -111,7 +111,7 @@ namespace Assignment1Tests
         }
 
         [TestMethod]
-        public void TestMethod7()
+        public void AllocationID3Test()
         {
             //Arrange
             int expectedID = 3;
@@ -130,7 +130,7 @@ namespace Assignment1Tests
         }
 
         [TestMethod]
-        public void TestMethod8()
+        public void AllocationID4Test()
         {
             //Arrange
             int expectedID = 4;
@@ -149,7 +149,7 @@ namespace Assignment1Tests
         }
 
         [TestMethod]
-        public void TestMethod9()
+        public void AllocationID5Test()
         {
             //Arrange
             int expectedID = 5;
@@ -168,7 +168,7 @@ namespace Assignment1Tests
         }
 
         [TestMethod]
-        public void TestMethod10()
+        public void AllocationID6Test()
         {
             //Arrange
             int expectedID = 6;
@@ -187,7 +187,7 @@ namespace Assignment1Tests
         }
 
         [TestMethod]
-        public void TestMethod11()
+        public void AllocationID7Test()
         {
             //Arrange
             int expectedID = 7;
@@ -206,7 +206,7 @@ namespace Assignment1Tests
         }
 
         [TestMethod]
-        public void TestMethod12()
+        public void AllocationID8Test()
         {
             //Arrange
             int expectedID = 8;
@@ -221,6 +221,120 @@ namespace Assignment1Tests
             //Assert
             Assert.AreEqual(expectedID, id, "ALLOCATION-ID 7 has incorrect ID");
             CollectionAssert.AreEqual(expectedMatrix1, matrix, "ALLOCATION-ID 7 is incorrect in Test1.tan");
+
+        }
+    }
+
+    [TestClass]
+    public class ConfigurationTests
+    {
+        //TODO csv tests
+        [TestMethod]
+        public void LogFileTest()
+        {
+            //Arrange
+
+
+            //Act
+
+
+            //Assert
+
+
+        }
+    }
+
+    [TestClass]
+    public class AllocationTests
+    {
+        //TODO Allocation tests
+        [TestMethod]
+        public void TestMethod1()
+        {
+            //Arrange
+
+
+            //Act
+
+
+            //Assert
+
+
+        }
+    }
+
+    [TestClass]
+    public class AllocationEnergyTests
+    {
+        //TODO computing the energy consumed by an Allocation tests
+        [TestMethod]
+        public void TestMethod1()
+        {
+            //Arrange
+
+
+            //Act
+
+
+            //Assert
+
+
+        }
+    }
+
+    [TestClass]
+    public class AllocationRuntimeTests
+    {
+        //TODO computing the runtime of an Allocation tests
+        [TestMethod]
+        public void TestMethod1()
+        {
+            //Arrange
+
+
+            //Act
+
+
+            //Assert
+
+
+        }
+    }
+
+    [TestClass]
+    public class TaskRuntimeTests
+    {
+        //TODO Computing the runtime of a task allocated to an N GHz processor tests
+        [TestMethod]
+        public void TestMethod1()
+        {
+            //Arrange
+
+
+            //Act
+
+
+            //Assert
+
+
+        }
+    }
+
+    [TestClass]
+    public class TaskEnergyTests
+    {
+        //TODO Computing the energy consumed by a task allocated to an N GHz processor tests
+        [TestMethod]
+        public void TestMethod1()
+        {
+            //Arrange
+
+
+            //Act
+
+
+            //Assert
+
 
         }
     }

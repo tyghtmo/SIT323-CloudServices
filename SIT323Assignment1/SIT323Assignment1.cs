@@ -19,7 +19,22 @@ namespace SIT323Assignment1
         private TaskAllocations aTaskAllocation = new TaskAllocations();
         private Configuration aConfiguration = new Configuration();
         string fileValiditys = "";
+
+        //constants
         private const string diffEnergyError = "Allocation ID: {0} has a different energy value {1:0.00} to Allocation ID: 1 with energy {2:0.00}";
+        private const string startTanFile = "START PROCESSING TAN FILE: ";
+        private const string endTanFile = "END PROCESSING TAN FILE: ";
+        private const string tanFileValid = "TAN file is valid\n\n";
+        private const string tanFileInvalid = "TAN file is invalid\n\n";
+        private const string fileNameMissing = "File Name Missing";
+        private const string csvFileValid = "Configuration file is valid\n\n";
+        private const string csvFileInvalid = "Configuration file is invalid\n\n";
+        private const string startCsvFile = "START PROCESSING CONFIG FILE: ";
+        private const string endCsvFile = "END PROCESSING CONFIG FILE: ";
+        private const string allocationDisplayString = "Allocation ID: {0}\n";
+        private const string startAllocations = "START PROCESSING ALLOCATIONS:";
+        private const string endAllocations = "END PROCESSING ALLOCATIONS: ";
+        private const string allocationTimeEnergyDisplay = "Allocation ID: {0}, Time: {1:0.00}, Energy: {2:0.00}\n";
 
         public SIT323Assignment1Form()
         {
@@ -49,25 +64,25 @@ namespace SIT323Assignment1
             if(result == DialogResult.OK)
             {
                 //Process TAN file
-                CompleteErrorList.Add("START PROCESSING TAN FILE: " + openFileDialog1.SafeFileName);
+                CompleteErrorList.Add(startTanFile + openFileDialog1.SafeFileName);
                 TaskAllocations.TryParse(openFileDialog1.FileName, out aTaskAllocation);
                 if (aTaskAllocation.AllocationErrorList != null) UpdateErrors(aTaskAllocation.AllocationErrorList);
-                CompleteErrorList.Add("END PROCESSING TAN FILE: " + openFileDialog1.SafeFileName);
+                CompleteErrorList.Add(endTanFile + openFileDialog1.SafeFileName);
 
-                if (aTaskAllocation.isValid) fileValiditys += "TAN file is valid\n\n";
-                else fileValiditys += "TAN file is invalid\n\n";
+                if (aTaskAllocation.isValid) fileValiditys += tanFileValid;
+                else fileValiditys += tanFileInvalid;
 
 
                 //Process CONFIG file
                 string configPath = "";
                 if (aTaskAllocation.ConfigPath == null)
                 {
-                    configPath = "File Name Missing";
-                    fileValiditys += "Configuration file is invalid\n\n";
+                    configPath = fileNameMissing;
+                    fileValiditys += csvFileInvalid;
                 }
                 else configPath = aTaskAllocation.ConfigPath;
                         
-                CompleteErrorList.Add("START PROCESSING CONFIG FILE: " + configPath);
+                CompleteErrorList.Add(startCsvFile + configPath);
                 if (aTaskAllocation.ConfigPath != null)
                 {
                     //Get directory of TAN file and add config path
@@ -77,10 +92,10 @@ namespace SIT323Assignment1
                     Configuration.TryParse(configFullPath, out aConfiguration);
                     if (aConfiguration.ConfigurationErrorList != null) UpdateErrors(aConfiguration.ConfigurationErrorList);
 
-                    if (aTaskAllocation.isValid) fileValiditys += "Configuration file is valid\n\n";
-                    else fileValiditys += "Configuration file is invalid\n\n";
+                    if (aTaskAllocation.isValid) fileValiditys += csvFileValid;
+                    else fileValiditys += csvFileInvalid;
                 }
-                CompleteErrorList.Add("END PROCESSING CONFIG FILE: " + configPath);
+                CompleteErrorList.Add(endCsvFile + configPath);
 
                 if(aTaskAllocation.isValid == true && aConfiguration.isValid == true)
                 {
@@ -96,7 +111,7 @@ namespace SIT323Assignment1
                 label1.Text += fileValiditys;
                 foreach (Allocation al in aTaskAllocation.SetOfAllocations)
                 {
-                    label1.Text += string.Format("Allocation ID: {0}\n", al.ID);
+                    label1.Text += string.Format(allocationDisplayString, al.ID);
                     label1.Text += al.MatrixToString();
                 }
             }
@@ -134,7 +149,7 @@ namespace SIT323Assignment1
             double energyMarker = 0;
 
             //Calculate allocations
-            CompleteErrorList.Add("START PROCESSING ALLOCATIONS:");
+            CompleteErrorList.Add(startAllocations);
             foreach (Allocation al in aTaskAllocation.SetOfAllocations)
             {
                 List<string> errors = new List<string>();
@@ -155,10 +170,10 @@ namespace SIT323Assignment1
                 UpdateErrors(errors);
 
                 //update text
-                label1.Text += string.Format("Allocation ID: {0}, Time: {1:0.00}, Energy: {2:0.00}\n", al.ID, timeString, energyString);
+                label1.Text += string.Format(allocationTimeEnergyDisplay, al.ID, timeString, energyString);
                 label1.Text += al.MatrixToString();
             }
-            CompleteErrorList.Add("END PROCESSING ALLOCATIONS: ");
+            CompleteErrorList.Add(endAllocations);
         }
     }
 }

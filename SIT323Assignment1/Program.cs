@@ -14,12 +14,6 @@ namespace SIT323Assignment1
         [STAThread]
         static void Main()
         {
-            
-            //string filePath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test1.tan";
-            //TaskAllocations test = new TaskAllocations(filePath);
-            //Boolean valid = test.Validate();
-            
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new SIT323Assignment1Form());

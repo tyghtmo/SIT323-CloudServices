@@ -16,6 +16,9 @@ namespace SIT323Assignment1
         private const string doubleQuote = "\"";
         private const string emptySpace = "";
 
+        //Regex
+        //TODO make all regex constants
+
         //Errors
         private const string missingKeyError = "CSV File is missing a key: ";
         private const string multipleKeyError = "CSV File contains multiple keys: ";
