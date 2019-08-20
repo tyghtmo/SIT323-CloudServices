@@ -1,0 +1,19 @@
+// The default log file name.
+DEFAULT-LOGFILE,"AT1-log.txt"
+
+// Minimum and maximum limits on the number of
+// tasks and processors and processor frequencies.
+LIMITS-TASKS,1,500
+LIMITS-PROCESSORS,1,1000
+LIMITS-PROCESSOR-FREQUENCIES,0,10
+
+PROGRAM-MAXIMUM-DURATION,1
+
+TASK-ID,RUNTIME
+1-1
+2,a
+3,2
+4,1
+5,3
+
+//

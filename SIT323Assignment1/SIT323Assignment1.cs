@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace SIT323Assignment1
 {
@@ -43,9 +44,21 @@ namespace SIT323Assignment1
             {
                 //TODO .tan and .csv initialisation and parsing
                 TaskAllocations.TryParse(openFileDialog1.FileName, out TaskAllocations aTaskAllocation);
+                if (aTaskAllocation.AllocationErrorList != null) CompleteErrorList.AddRange(aTaskAllocation.AllocationErrorList);
 
-                //Add errors
-                if(aTaskAllocation.AllocationErrorList != null) CompleteErrorList.AddRange(aTaskAllocation.AllocationErrorList);
+                //TODO get rid of this test
+                //aTaskAllocation.ConfigPath = "Test3.csv";
+
+                if (aTaskAllocation.ConfigPath != null)
+                {
+                    string directoryPath = Path.GetDirectoryName(openFileDialog1.FileName);
+                    string configFullPath = directoryPath + "\\" + aTaskAllocation.ConfigPath;
+
+                    //Configuration aConfiguration = new Configuration(configFullPath);
+                    //aConfiguration.Validate();
+                    Configuration.TryParse(configFullPath, out Configuration aConfiguration);
+                    if (aConfiguration.ConfigurationErrorList != null) CompleteErrorList.AddRange(aConfiguration.ConfigurationErrorList);
+                }
             }
         }
 
