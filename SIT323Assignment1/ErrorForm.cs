@@ -22,16 +22,10 @@ namespace SIT323Assignment1
             List<string> errors = SIT323Assignment1Form.CompleteErrorList;
 
             StringBuilder strBuild = new StringBuilder();
-            int errorCounter = 1;
             foreach(string str in errors)
             {
-                strBuild.Append("Error ");
-                strBuild.Append(errorCounter);
-                strBuild.Append(": ");
                 strBuild.Append(str);
-                strBuild.Append("\n");
-
-                errorCounter++;
+                strBuild.Append("\n\n");
             }
             string errorText = strBuild.ToString();
             label1.Text = errorText;

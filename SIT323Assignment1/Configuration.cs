@@ -73,14 +73,14 @@ namespace SIT323Assignment1
         public string ConfigurationFilePath { get; set; }
         #endregion
 
-
         #region Constructers
         public Configuration(string path)
         {
             ConfigurationFilePath = path;
         }
-        #endregion
 
+        public Configuration() { }
+        #endregion
 
         #region Methods
         //Helper method to convert strings to Int32
@@ -97,6 +97,10 @@ namespace SIT323Assignment1
 
         }
 
+        /// <summary>
+        /// Validates that all keys are present and the filename is correct
+        /// </summary>
+        /// <returns>Bool determined by any errors present</returns>
         public bool Validate()
         {
 
@@ -450,9 +454,9 @@ namespace SIT323Assignment1
 
                         if (doubleDigitSeperatorMatch.Count == 1)
                         {
-                            if (!aConfiguration.TaskRuntimes.ContainsKey(Int32.Parse(substrings[0])))
+                            if (!aConfiguration.ProcessorFrequencies.ContainsKey(Int32.Parse(substrings[0])))
                             {
-                                aConfiguration.ProcessorFrequencies.Add(Int32.Parse(substrings[0]), Int32.Parse(substrings[1]));
+                                aConfiguration.ProcessorFrequencies.Add(Int32.Parse(substrings[0]), double.Parse(substrings[1]));
                             }
                             else
                             {
@@ -493,7 +497,7 @@ namespace SIT323Assignment1
 
                         if (doubleDigitSeperatorMatch.Count == 1)
                         {
-                            if (!aConfiguration.TaskRuntimes.ContainsKey(Int32.Parse(substrings[0])))
+                            if (!aConfiguration.CoefficientValues.ContainsKey(Int32.Parse(substrings[0])))
                             {
                                 aConfiguration.CoefficientValues.Add(Int32.Parse(substrings[0]), Int32.Parse(substrings[1]));
                             }
@@ -527,11 +531,10 @@ namespace SIT323Assignment1
             aConfiguration.ConfigurationErrorList.AddRange(ParsingErrorList);
 
             //Check validity of file
-            aConfiguration.isValid = aConfiguration.Validate();
+            aConfiguration.isValid = (aConfiguration.Validate() && ParsingErrorList.Count == 0);
 
             return ParsingErrorList.Count == 0;
         }
-
         #endregion
     }
 }

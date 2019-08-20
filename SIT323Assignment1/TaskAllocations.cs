@@ -22,10 +22,10 @@ namespace SIT323Assignment1
         private const string commentLineError = "Invalid comment on line: ";
         private const string stringToIntError = "String to Int error: ";
         private const string missingSeperatorError = "Invalid seperator: ";
-        private const string invalidAllocationError = "Invalid Allocation: ";
         private const string invalidSeperatorError = "Invalid seperator on line: ";
         private const string diffNoAllocationToExpectedError = "Different number of Allocations than expected. {0} of {1} expected";
         private const string invalidFileError = "File type is invalid, must be .tan: ";
+        private const string invalidAllocationError = "Invalid Allocation: ";
         #endregion
 
         #region Properties
@@ -73,6 +73,10 @@ namespace SIT323Assignment1
 
         }
 
+        /// <summary>
+        /// Validates that all keys are present, checks that the number of allocations is equal to the number expected, validates the allocations and the filename.
+        /// </summary>
+        /// <returns>Bool determined by any errors present</returns>
         public bool Validate()
         {
 
@@ -147,18 +151,24 @@ namespace SIT323Assignment1
                 {
                     AllocationErrorList.Add(string.Format(diffNoAllocationToExpectedError, actualAllocations, expectedAllocations));
                 }
-            }  
+            }
 
             //Validate allocations
+            List<string> allocationErrors = new List<string>();
             foreach (Allocation a in SetOfAllocations)
             {
-                if (!Allocation.ValidateAllocation(a))
+                a.ValidateAllocation(out allocationErrors);
+                if (!a.isValid) AllocationErrorList.Add(invalidAllocationError + a.ToString());
+                AllocationErrorList.AddRange(allocationErrors);
+                /*
+                if (!Allocation.ValidateAllocation(a, out allocationErrors))
                 {
                     string error = invalidAllocationError;
                     error = error + a.ToString();
                     AllocationErrorList.Add(error);
-                }
+                }*/
             }
+            
 
             //Check filename is valid
             Regex tanFileRegex = new Regex(@".+\.tan$");
@@ -168,8 +178,7 @@ namespace SIT323Assignment1
             isValid = AllocationErrorList.Count == 0;
             return (isValid);
         }
-
-
+        
         /// <summary>
         /// Determines if a .tan file is valid and parses the data to an instance of TaskAllocation
         /// </summary>
@@ -303,7 +312,7 @@ namespace SIT323Assignment1
             anAllocation.AllocationErrorList.AddRange(ParsingErrorList);
 
             //Check validity of file
-            anAllocation.isValid = anAllocation.Validate();
+            anAllocation.isValid = (anAllocation.Validate() && ParsingErrorList.Count == 0);
 
             return ParsingErrorList.Count == 0;
         }

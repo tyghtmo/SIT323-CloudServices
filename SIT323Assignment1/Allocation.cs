@@ -8,9 +8,19 @@ namespace SIT323Assignment1
 {
     public class Allocation
     {
+        #region Properties
         public int ID { get; set; }
         public int[,] AllocationMatrix { get; set; }
 
+
+        private const string invalidIDError = "Invalid ID on Allocation with ID: ";
+        private const string multipleAllocationError = "A task ID: {0} in allocation ID: {1} has been allocated to {2} processors instead of 1";
+        private const string noAllocationError = "Task ID:{0} in allocation ID:{1} is not allocated to any processor";
+
+        public bool isValid = true;
+        #endregion
+
+        #region Constructors
         public Allocation(int id, int[,] matrix)
         {
             ID = id;
@@ -43,7 +53,9 @@ namespace SIT323Assignment1
                 }
             }
         }
+        #endregion
 
+        #region Methods
         public static int ToInt32(string input)
         {
             if (Int32.TryParse(input, out int anInt))
@@ -79,36 +91,107 @@ namespace SIT323Assignment1
             return str;
         }
 
-        public static Boolean ValidateAllocation(Allocation allocation)
+        public string MatrixToString()
         {
-            Boolean isValid = true;
+            string str = "";
+
+            for (int i = 0; i < AllocationMatrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < AllocationMatrix.GetLength(1); j++)
+                {
+                    str += AllocationMatrix[i, j] + ",";
+                }
+
+                //Remove last , 
+                str = str.Substring(0, str.Length - 1);
+                str += "\n";
+            }
+            str += "\n";
+
+            return str;
+        }
+
+        public bool ValidateAllocation(out List<string> errors)
+        {
+            errors = new List<string>();
 
             //Check ID is valid
-            if(allocation.ID < 0)
+            if(ID < 0)
             {
+                errors.Add(invalidIDError + ID);
                 isValid = false;
             }
 
-            int rows = allocation.AllocationMatrix.GetLength(0);
-            int columns = allocation.AllocationMatrix.GetLength(1);
+            int rows = AllocationMatrix.GetLength(0);
+            int columns = AllocationMatrix.GetLength(1);
 
-            for(int i = 0; i < columns; i++)
+            for(int tasks = 0; tasks < columns; tasks++)
             {
                 int columnSum = 0;
-                for(int j = 0; j < rows; j++)
+                for(int processors = 0; processors < rows; processors++)
                 {
                     //Add each column to determine if there is more or less than one 1 
-                    columnSum += allocation.AllocationMatrix[j, i];
+                    columnSum += AllocationMatrix[processors, tasks];
+                    string log = string.Format("Task: {0}   Pro: {1}  Sum: {2}", tasks, processors, columnSum);
                 }
 
+                
                 if(columnSum != 1)
                 {
+                    //errors.Add(invalidAllocationError + ToString());
                     isValid = false;
-                    break;
+                    if (columnSum == 0) errors.Add(string.Format(noAllocationError, tasks + 1, ID));
+                    if (columnSum > 1) errors.Add(string.Format(multipleAllocationError, tasks + 1, ID, columnSum));
+                    
                 }
+                
             }
 
             return isValid;
         }
+
+        public double CalculateTime(int refFrequency, Dictionary<int, int> taskRuntimes, Dictionary<int, double> ProcessorFrequencies)
+        {
+            double time = 0;
+            int[,] runtimeMatrix = AllocationMatrix.Clone() as int[,];
+            int rows = runtimeMatrix.GetLength(0);
+            int columns = runtimeMatrix.GetLength(1);
+
+
+            foreach (KeyValuePair<int, int> task in taskRuntimes)
+            {
+                for (int processors = 0; processors < rows; processors++)
+                {
+                   if(runtimeMatrix[processors, (task.Key - 1)] == 1)
+                    {
+                        runtimeMatrix[processors, task.Key- 1] = task.Value;
+                    }
+                }
+            }
+
+            //int rows = AllocationMatrix.GetLength(0);
+            // int columns = AllocationMatrix.GetLength(1);
+            for (int processors = 0; processors < rows; processors++)
+            {
+                int rowSum = 0;
+                for (int tasks = 0; tasks < columns; tasks++)
+                {
+                    rowSum += runtimeMatrix[processors, tasks];
+                }
+                double processorTime = rowSum * (refFrequency / ProcessorFrequencies[processors + 1]);
+                if (processorTime > time) time = processorTime;
+            }
+
+            return time;
+        }
+
+        public double CalculateEnergy()
+        {
+            double energy = 0;
+
+
+            return energy;
+        }
+        #endregion
     }
 }
