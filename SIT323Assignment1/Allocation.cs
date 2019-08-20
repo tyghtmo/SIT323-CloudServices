@@ -12,12 +12,14 @@ namespace SIT323Assignment1
         public int ID { get; set; }
         public int[,] AllocationMatrix { get; set; }
         public Dictionary<int, double> processorTimes = new Dictionary<int, double>();
+        public double AllocationEnergy;
 
 
         private const string invalidIDError = "Invalid ID on Allocation with ID: ";
         private const string multipleAllocationError = "A task ID: {0} in allocation ID: {1} has been allocated to {2} processors instead of 1";
         private const string noAllocationError = "Task ID: {0} in allocation ID: {1} is not allocated to any processor";
-        private const string exceedMaxRuntimeError = "Allocation ID: {0}'s runtime is {1:0.00} seconds which is greater than the max runtime of {2} seconds";
+        private const string exceedMaxRuntimeError = "Allocation ID: {0} runtime is {1:0.00} seconds which is greater than the max runtime of {2} seconds";
+
 
         public bool isValid = true;
         #endregion
@@ -195,17 +197,20 @@ namespace SIT323Assignment1
         {
             errors = new List<string>();
             double energy = 0;
+
             double c0 = aConfiguration.CoefficientValues[0];
             double c1 = aConfiguration.CoefficientValues[1];
             double c2 = aConfiguration.CoefficientValues[2];
 
             foreach(KeyValuePair<int, double> time in processorTimes)
             {
+                
                 double f = aConfiguration.ProcessorFrequencies[time.Key];
                 energy += time.Value * (c2 * (f * f) + c1 * f + c0);
+                
             }
-            //TODO energy not same error
 
+            AllocationEnergy = energy;
             return energy;
         }
         #endregion

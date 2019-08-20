@@ -19,6 +19,7 @@ namespace SIT323Assignment1
         private TaskAllocations aTaskAllocation = new TaskAllocations();
         private Configuration aConfiguration = new Configuration();
         string fileValiditys = "";
+        private const string diffEnergyError = "Allocation ID: {0} has a different energy value {1:0.00} to Allocation ID: 1 with energy {2:0.00}";
 
         public SIT323Assignment1Form()
         {
@@ -55,10 +56,6 @@ namespace SIT323Assignment1
 
                 if (aTaskAllocation.isValid) fileValiditys += "TAN file is valid\n\n";
                 else fileValiditys += "TAN file is invalid\n\n";
-
-
-                //TODO get rid of this test
-                //aTaskAllocation.ConfigPath = "Test3.csv";
 
 
                 //Process CONFIG file
@@ -134,6 +131,8 @@ namespace SIT323Assignment1
         {
             label1.Text = "";
             label1.Text += fileValiditys;
+            double energyMarker = 0;
+
             //Calculate allocations
             CompleteErrorList.Add("START PROCESSING ALLOCATIONS:");
             foreach (Allocation al in aTaskAllocation.SetOfAllocations)
@@ -142,14 +141,20 @@ namespace SIT323Assignment1
 
                 //get time
                 double time = al.CalculateTime(aConfiguration, out errors);
+                UpdateErrors(errors);
                 string timeString = time.ToString("0.00");
+                
 
                 //get energy
                 double energy = al.CalculateEnergy(aConfiguration, out errors);
+                UpdateErrors(errors);
                 string energyString = energy.ToString("0.00");
 
-                //update text
+                if (energyMarker == 0) energyMarker = energy;
+                if (energy != energyMarker) errors.Add(string.Format(diffEnergyError, al.ID, al.AllocationEnergy, energyMarker));
                 UpdateErrors(errors);
+
+                //update text
                 label1.Text += string.Format("Allocation ID: {0}, Time: {1:0.00}, Energy: {2:0.00}\n", al.ID, timeString, energyString);
                 label1.Text += al.MatrixToString();
             }
