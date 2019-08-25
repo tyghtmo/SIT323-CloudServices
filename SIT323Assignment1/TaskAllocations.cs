@@ -28,7 +28,7 @@ namespace SIT323Assignment1
         private const string invalidAllocationError = "Invalid Allocation: ";
 
         //Regex
-        private const string configFilePattern = @"CONFIG-FILE";
+        private const string configFilePattern = @"CONFIGURATION";
         private const string tasksPattern = @"TASKS";
         private const string processorsPattern = @"PROCESSORS";
         private const string allocationsPattern = @"ALLOCATIONS";
@@ -40,7 +40,7 @@ namespace SIT323Assignment1
 
         #region Properties
         //Keys
-        private readonly string configPathKey = "CONFIG-FILE";
+        private readonly string configPathKey = "CONFIGURATION";
         private readonly string tasksKey = "TASKS";
         private readonly string processorsKey = "PROCESSORS";
         private readonly string allocationsKey = "ALLOCATIONS";

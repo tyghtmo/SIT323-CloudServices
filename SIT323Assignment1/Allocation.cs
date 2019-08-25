@@ -10,7 +10,7 @@ namespace SIT323Assignment1
     {
         #region Properties
         public int ID { get; set; }
-        public int[,] AllocationMatrix { get; set; }
+        public double[,] AllocationMatrix { get; set; }
         public Dictionary<int, double> processorTimes = new Dictionary<int, double>();
         public double AllocationTime;
         public double AllocationEnergy;
@@ -26,7 +26,7 @@ namespace SIT323Assignment1
         #endregion
 
         #region Constructors
-        public Allocation(int id, int[,] matrix)
+        public Allocation(int id, double[,] matrix)
         {
             ID = id;
             AllocationMatrix = matrix;
@@ -38,7 +38,7 @@ namespace SIT323Assignment1
 
             int rows = matrix.Count;
             int columns = matrix[1].Replace(",", "").Length;
-            AllocationMatrix = new int[rows,columns];
+            AllocationMatrix = new double[rows,columns];
 
             for (int i = 0 ; i < rows; i++)
             {
@@ -132,7 +132,7 @@ namespace SIT323Assignment1
 
             for(int tasks = 0; tasks < columns; tasks++)
             {
-                int columnSum = 0;
+                double columnSum = 0;
                 for(int processors = 0; processors < rows; processors++)
                 {
                     //Add each column to determine if there is more or less than one 1 
@@ -159,14 +159,14 @@ namespace SIT323Assignment1
         {
             errors = new List<string>();
             double time = 0;
-            int[,] runtimeMatrix = AllocationMatrix.Clone() as int[,];
+            double[,] runtimeMatrix = AllocationMatrix.Clone() as double[,];
             int rows = runtimeMatrix.GetLength(0);
             int columns = runtimeMatrix.GetLength(1);
 
             //add runtimes to allocation matrix
             if (aconfiguration.TaskRuntimes != null)
             {
-                foreach (KeyValuePair<int, int> task in aconfiguration.TaskRuntimes)
+                foreach (KeyValuePair<int, double> task in aconfiguration.TaskRuntimes)
                 {
                     for (int processors = 0; processors < rows; processors++)
                     {
@@ -180,7 +180,7 @@ namespace SIT323Assignment1
                 //Calculate time for each processor
                 for (int processors = 0; processors < rows; processors++)
                 {
-                    int rowSum = 0;
+                    double rowSum = 0;
                     for (int tasks = 0; tasks < columns; tasks++)
                     {
                         rowSum += runtimeMatrix[processors, tasks];

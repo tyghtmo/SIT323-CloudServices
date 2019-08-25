@@ -1,5 +1,5 @@
 // The name of the configuration file.
-CONFIG-FILE,"Test1.csv"
+CONFIGURATION,"Test1.csv"
 
 // The number of tasks and processors per allocation.
 TASKS,5

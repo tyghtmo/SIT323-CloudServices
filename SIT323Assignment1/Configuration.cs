@@ -67,16 +67,16 @@ namespace SIT323Assignment1
         public int TasksMax { get; set; }
         public int ProcessorsMin { get; set; }
         public int ProcessorsMax { get; set; }
-        public int ProcessorsFrequencyMin { get; set; }
-        public int ProcessorsFrequencyMax { get; set; }
+        public double ProcessorsFrequencyMin { get; set; }
+        public double ProcessorsFrequencyMax { get; set; }
         public int ProgramMaxDuration { get; set; }
         public int ProgramTasks { get; set; }
         public int ProgramProcessors { get; set; }
-        public int RuntimeReferenceFrequency { get; set; }
+        public double RuntimeReferenceFrequency { get; set; }
 
-        public Dictionary<int, int> TaskRuntimes { get; set; }
+        public Dictionary<int, double> TaskRuntimes { get; set; }
         public Dictionary<int, double> ProcessorFrequencies { get; set; }
-        public Dictionary<int, int> CoefficientValues { get; set; }
+        public Dictionary<int, double> CoefficientValues { get; set; }
 
         //Errors
         public bool isValid { get; set; }
@@ -229,9 +229,9 @@ namespace SIT323Assignment1
         {
             aConfiguration = new Configuration(path);
             List<String> ParsingErrorList = new List<string>();
-            aConfiguration.TaskRuntimes = new Dictionary<int, int>();
+            aConfiguration.TaskRuntimes = new Dictionary<int, double>();
             aConfiguration.ProcessorFrequencies = new Dictionary<int, double>();
-            aConfiguration.CoefficientValues = new Dictionary<int, int>();
+            aConfiguration.CoefficientValues = new Dictionary<int, double>();
 
             Regex singleSeperatorRegex = new Regex(singleSeperatorPattern);
             Regex doubleSeperatorRegex = new Regex(doubleSeperatorPattern);
@@ -320,10 +320,10 @@ namespace SIT323Assignment1
                 else if (line.Contains(aConfiguration.processorsFreqLimitsKey))
                 {
                     string[] substrings = line.Split(delimiter);
-                    if (textDoubleDigitSeperatorMatch.Count == 1 && substrings[0] == aConfiguration.processorsFreqLimitsKey)
+                    if (substrings[0] == aConfiguration.processorsFreqLimitsKey)
                     {
-                        aConfiguration.ProcessorsFrequencyMin = Int32.Parse(substrings[1]);
-                        aConfiguration.ProcessorsFrequencyMax = Int32.Parse(substrings[2]);
+                        aConfiguration.ProcessorsFrequencyMin = double.Parse(substrings[1]);
+                        aConfiguration.ProcessorsFrequencyMax = double.Parse(substrings[2]);
                     }
                     else if (doubleSeperatorMatch.Count == 0)
                     {
@@ -389,9 +389,9 @@ namespace SIT323Assignment1
                 else if (line.Contains(aConfiguration.runtimeRefFreqKey))
                 {
                     string[] substrings = line.Split(delimiter);
-                    if (textDigitSeperatorMatch.Count == 1 && substrings[0] == aConfiguration.runtimeRefFreqKey)
+                    if (substrings[0] == aConfiguration.runtimeRefFreqKey)
                     {
-                        aConfiguration.RuntimeReferenceFrequency = Int32.Parse(substrings[1]);
+                        aConfiguration.RuntimeReferenceFrequency = double.Parse(substrings[1]);
                     }
                     else if (singleSeperatorMatch.Count == 0)
                     {
@@ -424,9 +424,9 @@ namespace SIT323Assignment1
 
                         if (doubleDigitSeperatorMatch.Count == 1)
                         {
-                            if (!aConfiguration.TaskRuntimes.ContainsKey(Int32.Parse(substrings[0])))
+                            if (!aConfiguration.TaskRuntimes.ContainsKey(int.Parse(substrings[0])))
                             {
-                                aConfiguration.TaskRuntimes.Add(Int32.Parse(substrings[0]), Int32.Parse(substrings[1]));
+                                aConfiguration.TaskRuntimes.Add(int.Parse(substrings[0]), double.Parse(substrings[1]));
                             }
                             else
                             {
@@ -512,7 +512,7 @@ namespace SIT323Assignment1
                         {
                             if (!aConfiguration.CoefficientValues.ContainsKey(Int32.Parse(substrings[0])))
                             {
-                                aConfiguration.CoefficientValues.Add(Int32.Parse(substrings[0]), Int32.Parse(substrings[1]));
+                                aConfiguration.CoefficientValues.Add(Int32.Parse(substrings[0]), double.Parse(substrings[1]));
                             }
                             else
                             {

@@ -23,7 +23,7 @@ namespace Assignment1Tests
             string configFile = test.ConfigPath;
 
             //Assert
-            Assert.AreEqual(expectedConfigFile, configFile, "CONFIG-FILE path is incorrect in Test1.tan");
+            Assert.AreEqual(expectedConfigFile, configFile, "CONFIGURATION path is incorrect in Test1.tan");
 
         }
 
@@ -79,13 +79,13 @@ namespace Assignment1Tests
         {
             //Arrange
             int expectedID = 1;
-            int[,] expectedMatrix1 = { { 1, 1, 0, 0, 0 }, { 0, 0, 1, 1, 0 }, { 0, 0, 0, 0, 1 } };
+            double[,] expectedMatrix1 = { { 1, 1, 0, 0, 0 }, { 0, 0, 1, 1, 0 }, { 0, 0, 0, 0, 1 } };
 
             //Act
             TaskAllocations test = new TaskAllocations(test1FilePath);
             TaskAllocations.TryParse(test1FilePath, out test);
             int id = test.SetOfAllocations[0].ID;
-            int[,] matrix = test.SetOfAllocations[0].AllocationMatrix;
+            double[,] matrix = test.SetOfAllocations[0].AllocationMatrix;
 
             //Assert
             Assert.AreEqual(expectedID, id, "ALLOCATION-ID 1 has incorrect ID");
@@ -98,13 +98,13 @@ namespace Assignment1Tests
         {
             //Arrange
             int expectedID = 2;
-            int[,] expectedMatrix1 = { { 1, 1, 0, 0, 0 }, { 0, 0, 0, 0, 1 }, { 0, 0, 1, 1, 0 } };
+            double[,] expectedMatrix1 = { { 1, 1, 0, 0, 0 }, { 0, 0, 0, 0, 1 }, { 0, 0, 1, 1, 0 } };
 
             //Act
             TaskAllocations test = new TaskAllocations(test1FilePath);
             TaskAllocations.TryParse(test1FilePath, out test);
             int id = test.SetOfAllocations[1].ID;
-            int[,] matrix = test.SetOfAllocations[1].AllocationMatrix;
+            double[,] matrix = test.SetOfAllocations[1].AllocationMatrix;
 
             //Assert
             Assert.AreEqual(expectedID, id, "ALLOCATION-ID 2 has incorrect ID");
@@ -117,13 +117,13 @@ namespace Assignment1Tests
         {
             //Arrange
             int expectedID = 3;
-            int[,] expectedMatrix1 = { { 1, 0, 0, 1, 0 }, { 0, 1, 1, 0, 0 }, { 0, 0, 0, 0, 1 } };
+            double[,] expectedMatrix1 = { { 1, 0, 0, 1, 0 }, { 0, 1, 1, 0, 0 }, { 0, 0, 0, 0, 1 } };
 
             //Act
             TaskAllocations test = new TaskAllocations(test1FilePath);
             TaskAllocations.TryParse(test1FilePath, out test);
             int id = test.SetOfAllocations[2].ID;
-            int[,] matrix = test.SetOfAllocations[2].AllocationMatrix;
+            double[,] matrix = test.SetOfAllocations[2].AllocationMatrix;
 
             //Assert
             Assert.AreEqual(expectedID, id, "ALLOCATION-ID 3 has incorrect ID");
@@ -136,13 +136,13 @@ namespace Assignment1Tests
         {
             //Arrange
             int expectedID = 4;
-            int[,] expectedMatrix1 = { { 1, 0, 0, 1, 0 }, { 0, 0, 0, 0, 1 }, { 0, 1, 1, 0, 0 } };
+            double[,] expectedMatrix1 = { { 1, 0, 0, 1, 0 }, { 0, 0, 0, 0, 1 }, { 0, 1, 1, 0, 0 } };
 
             //Act
             TaskAllocations test = new TaskAllocations(test1FilePath);
             TaskAllocations.TryParse(test1FilePath, out test);
             int id = test.SetOfAllocations[3].ID;
-            int[,] matrix = test.SetOfAllocations[3].AllocationMatrix;
+            double[,] matrix = test.SetOfAllocations[3].AllocationMatrix;
 
             //Assert
             Assert.AreEqual(expectedID, id, "ALLOCATION-ID 4 has incorrect ID");
@@ -155,13 +155,13 @@ namespace Assignment1Tests
         {
             //Arrange
             int expectedID = 5;
-            int[,] expectedMatrix1 = { { 0, 1, 0, 1, 0 }, { 1, 0, 1, 0, 0 }, { 0, 0, 0, 0, 1 } };
+            double[,] expectedMatrix1 = { { 0, 1, 0, 1, 0 }, { 1, 0, 1, 0, 0 }, { 0, 0, 0, 0, 1 } };
 
             //Act
             TaskAllocations test = new TaskAllocations(test1FilePath);
             TaskAllocations.TryParse(test1FilePath, out test);
             int id = test.SetOfAllocations[4].ID;
-            int[,] matrix = test.SetOfAllocations[4].AllocationMatrix;
+            double[,] matrix = test.SetOfAllocations[4].AllocationMatrix;
 
             //Assert
             Assert.AreEqual(expectedID, id, "ALLOCATION-ID 5 has incorrect ID");
@@ -174,13 +174,13 @@ namespace Assignment1Tests
         {
             //Arrange
             int expectedID = 6;
-            int[,] expectedMatrix1 = { { 0, 0, 1, 0, 0 }, { 1, 1, 0, 1, 0 }, { 0, 0, 0, 0, 1 } };
+            double[,] expectedMatrix1 = { { 0, 0, 1, 0, 0 }, { 1, 1, 0, 1, 0 }, { 0, 0, 0, 0, 1 } };
 
             //Act
             TaskAllocations test = new TaskAllocations(test1FilePath);
             TaskAllocations.TryParse(test1FilePath, out test);
             int id = test.SetOfAllocations[5].ID;
-            int[,] matrix = test.SetOfAllocations[5].AllocationMatrix;
+            double[,] matrix = test.SetOfAllocations[5].AllocationMatrix;
 
             //Assert
             Assert.AreEqual(expectedID, id, "ALLOCATION-ID 5 has incorrect ID");
@@ -193,13 +193,13 @@ namespace Assignment1Tests
         {
             //Arrange
             int expectedID = 7;
-            int[,] expectedMatrix1 = { { 0, 1, 0, 1, 0 }, { 0, 0, 0, 0, 1 }, { 1, 0, 1, 0, 0 } };
+            double[,] expectedMatrix1 = { { 0, 1, 0, 1, 0 }, { 0, 0, 0, 0, 1 }, { 1, 0, 1, 0, 0 } };
 
             //Act
             TaskAllocations test = new TaskAllocations(test1FilePath);
             TaskAllocations.TryParse(test1FilePath, out test);
             int id = test.SetOfAllocations[6].ID;
-            int[,] matrix = test.SetOfAllocations[6].AllocationMatrix;
+            double[,] matrix = test.SetOfAllocations[6].AllocationMatrix;
 
             //Assert
             Assert.AreEqual(expectedID, id, "ALLOCATION-ID 6 has incorrect ID");
@@ -212,13 +212,13 @@ namespace Assignment1Tests
         {
             //Arrange
             int expectedID = 8;
-            int[,] expectedMatrix1 = { { 0, 0, 1, 0, 0 }, { 0, 0, 0, 0, 1 }, { 1, 1, 0, 1, 0 } };
+            double[,] expectedMatrix1 = { { 0, 0, 1, 0, 0 }, { 0, 0, 0, 0, 1 }, { 1, 1, 0, 1, 0 } };
 
             //Act
             TaskAllocations test = new TaskAllocations(test1FilePath);
             TaskAllocations.TryParse(test1FilePath, out test);
             int id = test.SetOfAllocations[7].ID;
-            int[,] matrix = test.SetOfAllocations[7].AllocationMatrix;
+            double[,] matrix = test.SetOfAllocations[7].AllocationMatrix;
 
             //Assert
             Assert.AreEqual(expectedID, id, "ALLOCATION-ID 7 has incorrect ID");
@@ -273,7 +273,7 @@ namespace Assignment1Tests
         {
             //Arrange
             int ID = 1;
-            int[,] allocation = { { 1, 1, 0, 0, 0 }, { 0, 0, 1, 1, 0 }, { 0, 0, 0, 0, 1 } };
+            double[,] allocation = { { 1, 1, 0, 0, 0 }, { 0, 0, 1, 1, 0 }, { 0, 0, 0, 0, 1 } };
             bool expected = true;
 
             //Act
@@ -290,7 +290,7 @@ namespace Assignment1Tests
         {
             //Arrange
             int ID = 1;
-            int[,] allocation = { { 1, 1, 0, 0, 0 }, { 0, 0, 1, 1, 0 }, { 0, 0, 0, 0, 0 } };
+            double[,] allocation = { { 1, 1, 0, 0, 0 }, { 0, 0, 1, 1, 0 }, { 0, 0, 0, 0, 0 } };
             bool expected = false;
 
             //Act
@@ -307,7 +307,7 @@ namespace Assignment1Tests
         {
             //Arrange
             int ID = 1;
-            int[,] allocation = { { 1, 1, 0, 0, 0 }, { 0, 1, 1, 0, 0 }, { 0, 0, 1, 1, 0 } };
+            double[,] allocation = { { 1, 1, 0, 0, 0 }, { 0, 1, 1, 0, 0 }, { 0, 0, 1, 1, 0 } };
             bool expected = false;
 
             //Act
