@@ -12,6 +12,7 @@ namespace SIT323Assignment1
         public int ID { get; set; }
         public int[,] AllocationMatrix { get; set; }
         public Dictionary<int, double> processorTimes = new Dictionary<int, double>();
+        public double AllocationTime;
         public double AllocationEnergy;
 
 
@@ -189,7 +190,10 @@ namespace SIT323Assignment1
                     if (processorTime > time) time = processorTime;
                 }
             }
+
             if (time > aconfiguration.ProgramMaxDuration) errors.Add(string.Format(exceedMaxRuntimeError, ID, time, aconfiguration.ProgramMaxDuration));
+
+            AllocationTime = time;
             return time;
         }
 

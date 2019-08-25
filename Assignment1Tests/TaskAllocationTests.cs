@@ -1,5 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SIT323Assignment1;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Assignment1Tests
@@ -228,18 +230,36 @@ namespace Assignment1Tests
     [TestClass]
     public class ConfigurationTests
     {
-        //TODO csv tests
+        //csv tests
         [TestMethod]
-        public void LogFileTest()
+        public void ValidConfigurationTest()
         {
             //Arrange
-
+            string configPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test1.csv";
+            bool expected = true;
 
             //Act
-
+            Configuration.TryParse(configPath, out Configuration aConfiguration);
+            bool actual = aConfiguration.Validate();
 
             //Assert
+            Assert.AreEqual(expected, actual);
 
+        }
+
+        [TestMethod]
+        public void InvalidConfigurationTest1()
+        {
+            //Arrange
+            string configPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test3.csv";
+            bool expected = false;
+
+            //Act
+            Configuration.TryParse(configPath, out Configuration aConfiguration);
+            bool actual = aConfiguration.Validate();
+
+            //Assert
+            Assert.AreEqual(expected, actual);
 
         }
     }
@@ -247,18 +267,55 @@ namespace Assignment1Tests
     [TestClass]
     public class AllocationTests
     {
-        //TODO Allocation tests
+        //Allocation tests
         [TestMethod]
-        public void TestMethod1()
+        public void validAllocationTest()
         {
             //Arrange
-
+            int ID = 1;
+            int[,] allocation = { { 1, 1, 0, 0, 0 }, { 0, 0, 1, 1, 0 }, { 0, 0, 0, 0, 1 } };
+            bool expected = true;
 
             //Act
-
+            Allocation anAllocation = new Allocation(ID, allocation);
+            bool actual = anAllocation.ValidateAllocation(out List<string> errors);
 
             //Assert
+            Assert.AreEqual(expected, actual);
 
+        }
+
+        [TestMethod]
+        public void invalidAllocationTest1()
+        {
+            //Arrange
+            int ID = 1;
+            int[,] allocation = { { 1, 1, 0, 0, 0 }, { 0, 0, 1, 1, 0 }, { 0, 0, 0, 0, 0 } };
+            bool expected = false;
+
+            //Act
+            Allocation anAllocation = new Allocation(ID, allocation);
+            bool actual = anAllocation.ValidateAllocation(out List<string> errors);
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+
+        }
+
+        [TestMethod]
+        public void invalidAllocationTest2()
+        {
+            //Arrange
+            int ID = 1;
+            int[,] allocation = { { 1, 1, 0, 0, 0 }, { 0, 1, 1, 0, 0 }, { 0, 0, 1, 1, 0 } };
+            bool expected = false;
+
+            //Act
+            Allocation anAllocation = new Allocation(ID, allocation);
+            bool actual = anAllocation.ValidateAllocation(out List<string> errors);
+
+            //Assert
+            Assert.AreEqual(expected, actual);
 
         }
     }
@@ -266,18 +323,24 @@ namespace Assignment1Tests
     [TestClass]
     public class AllocationEnergyTests
     {
-        //TODO computing the energy consumed by an Allocation tests
+        //computing the energy consumed by an Allocation tests
         [TestMethod]
-        public void TestMethod1()
+        public void AllocationEnergyTest1()
         {
             //Arrange
-
+            string tanPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test1.tan";
+            string configPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test1.csv";
+            double expectedEnergy = 155.77;
+            List<string> errors = new List<string>();
 
             //Act
-
+            TaskAllocations.TryParse(tanPath, out TaskAllocations aTaskAllocation);
+            Configuration.TryParse(configPath, out Configuration aConfiguration);
+            aTaskAllocation.SetOfAllocations[0].CalculateTime(aConfiguration, out errors);
+            double actualEnergy = Math.Round(aTaskAllocation.SetOfAllocations[0].CalculateEnergy(aConfiguration, out errors), 2);
 
             //Assert
-
+            Assert.AreEqual(expectedEnergy, actualEnergy);
 
         }
     }
@@ -285,57 +348,25 @@ namespace Assignment1Tests
     [TestClass]
     public class AllocationRuntimeTests
     {
-        //TODO computing the runtime of an Allocation tests
+        //computing the runtime of an Allocation tests
         [TestMethod]
-        public void TestMethod1()
+        public void AllocationRuntimeTest1()
         {
             //Arrange
-
-
-            //Act
-
-
-            //Assert
-
-
-        }
-    }
-
-    [TestClass]
-    public class TaskRuntimeTests
-    {
-        //TODO Computing the runtime of a task allocated to an N GHz processor tests
-        [TestMethod]
-        public void TestMethod1()
-        {
-            //Arrange
-
+            string tanPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test1.tan";
+            string configPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test1.csv";
+            double expectedTime = 2.61;
+            List<string> errors = new List<string>();
 
             //Act
-
-
-            //Assert
-
-
-        }
-    }
-
-    [TestClass]
-    public class TaskEnergyTests
-    {
-        //TODO Computing the energy consumed by a task allocated to an N GHz processor tests
-        [TestMethod]
-        public void TestMethod1()
-        {
-            //Arrange
-
-
-            //Act
-
+            TaskAllocations.TryParse(tanPath, out TaskAllocations aTaskAllocation);
+            Configuration.TryParse(configPath, out Configuration aConfiguration);
+            double actualtime = Math.Round(aTaskAllocation.SetOfAllocations[0].CalculateTime(aConfiguration, out errors), 2);
 
             //Assert
-
+            Assert.AreEqual(expectedTime, actualtime);
 
         }
     }
 }
+

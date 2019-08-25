@@ -15,9 +15,6 @@ namespace SIT323Assignment1
         private const string doubleQuote = "\"";
         private const string emptySpace = "";
 
-        //Regex
-        //TODO make all regex constants
-
         //Errors
         private const string missingKeyError = "TAN File is missing a key: ";
         private const string multipleKeyError = "TAN File contains multiple keys: ";
@@ -29,6 +26,16 @@ namespace SIT323Assignment1
         private const string diffNoAllocationToExpectedError = "Different number of Allocations than expected. {0} of {1} expected";
         private const string invalidFileError = "File type is invalid, must be .tan: ";
         private const string invalidAllocationError = "Invalid Allocation: ";
+
+        //Regex
+        private const string configFilePattern = @"CONFIG-FILE";
+        private const string tasksPattern = @"TASKS";
+        private const string processorsPattern = @"PROCESSORS";
+        private const string allocationsPattern = @"ALLOCATIONS";
+        private const string allocationDigitPattern = @"ALLOCATIONS,\d+";
+        private const string allocationIDPattern = @"ALLOCATION-ID";
+        private const string tanFilePattern = @".+\.tan$";
+        private const string seperatorPattern = @".+,.+";
         #endregion
 
         #region Properties
@@ -93,7 +100,7 @@ namespace SIT323Assignment1
             file.Close();
 
             //Check file contains all keys
-            Regex configPathRegex = new Regex(@"CONFIG-FILE");
+            Regex configPathRegex = new Regex(configFilePattern);
             MatchCollection configPathMatch = configPathRegex.Matches(tanContents);
             if (configPathMatch.Count == 0)
             {
@@ -104,7 +111,7 @@ namespace SIT323Assignment1
                 AllocationErrorList.Add(multipleKeyError + configPathKey);
             }
 
-            Regex tasksRegex = new Regex(@"TASKS");
+            Regex tasksRegex = new Regex(tasksPattern);
             MatchCollection tasksMatch = tasksRegex.Matches(tanContents);
             if (tasksMatch.Count == 0)
             {
@@ -115,7 +122,7 @@ namespace SIT323Assignment1
                 AllocationErrorList.Add(multipleKeyError + tasksKey);
             }
 
-            Regex processorsRegex = new Regex(@"PROCESSORS");
+            Regex processorsRegex = new Regex(processorsPattern);
             MatchCollection processorsMatch = processorsRegex.Matches(tanContents);
             if (processorsMatch.Count == 0)
             {
@@ -126,7 +133,7 @@ namespace SIT323Assignment1
                 AllocationErrorList.Add(multipleKeyError + processorsKey);
             }
 
-            Regex allocationRegex = new Regex(@"ALLOCATIONS");
+            Regex allocationRegex = new Regex(allocationsPattern);
             MatchCollection allocationMatch = allocationRegex.Matches(tanContents);
             if (allocationMatch.Count == 0)
             {
@@ -138,7 +145,7 @@ namespace SIT323Assignment1
             }
 
             //Check No. of Allocations is correct
-            Regex allocationWithDigitRegex = new Regex(@"ALLOCATIONS,\d+");
+            Regex allocationWithDigitRegex = new Regex(allocationDigitPattern);
             MatchCollection allocationWithDigitMatch = allocationWithDigitRegex.Matches(tanContents);
             string line = "";
             int expectedAllocations = -1;
@@ -150,7 +157,7 @@ namespace SIT323Assignment1
                 expectedAllocations = ToInt32(substrings[1]);
                 if (expectedAllocations == -1) AllocationErrorList.Add(stringToIntError + line);
 
-                Regex allocationIDRegex = new Regex(@"ALLOCATION-ID");
+                Regex allocationIDRegex = new Regex(allocationIDPattern);
                 MatchCollection allocationIDMatch = allocationIDRegex.Matches(tanContents);
                 int actualAllocations = allocationIDMatch.Count;
 
@@ -168,18 +175,11 @@ namespace SIT323Assignment1
                 a.ValidateAllocation(out allocationErrors);
                 if (!a.isValid) AllocationErrorList.Add(invalidAllocationError + a.ID);
                 AllocationErrorList.AddRange(allocationErrors);
-                /*
-                if (!Allocation.ValidateAllocation(a, out allocationErrors))
-                {
-                    string error = invalidAllocationError;
-                    error = error + a.ToString();
-                    AllocationErrorList.Add(error);
-                }*/
             }
             
 
             //Check filename is valid
-            Regex tanFileRegex = new Regex(@".+\.tan$");
+            Regex tanFileRegex = new Regex(tanFilePattern);
             MatchCollection tanFileMatch = tanFileRegex.Matches(taskAllocationPath);
             if (tanFileMatch.Count == 0) AllocationErrorList.Add(invalidFileError + taskAllocationPath);
 
@@ -200,7 +200,7 @@ namespace SIT323Assignment1
             List<String> ParsingErrorList = new List<string>();
             anAllocation.SetOfAllocations = new List<Allocation>();
 
-            Regex seperatorRegex = new Regex(@".+,.+");
+            Regex seperatorRegex = new Regex(seperatorPattern);
 
             //Begin parsing TAN file
             StreamReader file = new StreamReader(path);

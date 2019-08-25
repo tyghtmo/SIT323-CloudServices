@@ -16,9 +16,6 @@ namespace SIT323Assignment1
         private const string doubleQuote = "\"";
         private const string emptySpace = "";
 
-        //Regex
-        //TODO make all regex constants
-
         //Errors
         private const string missingKeyError = "CSV File is missing a key: ";
         private const string multipleKeyError = "CSV File contains multiple keys: ";
@@ -29,6 +26,22 @@ namespace SIT323Assignment1
         private const string commentLineError = "Invalid comment on line: ";
         private const string invalidSeperatorError = "Invalid seperator on line: ";
         private const string invalidIDError = "{0} with this ID already exists: {1}";
+
+        //Regex
+        private const string logFilePattern = @"DEFAULT-LOGFILE";
+        private const string taskLimitPattern = @"LIMITS-TASKS";
+        private const string PatternprocessorsLimitPattern = @"LIMITS-PROCESSORS";
+        private const string processorFrequencyLimitsPattern = @"LIMITS-PROCESSOR-FREQUENCIES";
+        private const string programMaxDurationPattern = @"PROGRAM-MAXIMUM-DURATION";
+        private const string programTaskPattern = @"PROGRAM-TASKS";
+        private const string programProcessorsPattern = @"PROGRAM-PROCESSORS";
+        private const string runtimeRefFreqPattern = @"RUNTIME-REFERENCE-FREQUENCY";
+        private const string csvFilePattern = @".+\.csv$";
+        private const string singleSeperatorPattern = @"^.*,.*$";
+        private const string doubleSeperatorPattern = @"^.*,.*,.*$";
+        private const string doubleDigitSeperatorPattern = @"^\d+,-*\d+\.?\d*$";
+        private const string textDigitSeperatorPattern = @"^.+,\d+$";
+        private const string textDoubleDigitSeperatorPattern = @"^.+(?:,\d+){2}$";
         #endregion
 
         #region Properties
@@ -50,18 +63,15 @@ namespace SIT323Assignment1
 
         //Values
         public string LogFilePath { get; set; }
-
         public int TasksMin { get; set; }
         public int TasksMax { get; set; }
         public int ProcessorsMin { get; set; }
         public int ProcessorsMax { get; set; }
         public int ProcessorsFrequencyMin { get; set; }
         public int ProcessorsFrequencyMax { get; set; }
-
         public int ProgramMaxDuration { get; set; }
         public int ProgramTasks { get; set; }
         public int ProgramProcessors { get; set; }
-
         public int RuntimeReferenceFrequency { get; set; }
 
         public Dictionary<int, int> TaskRuntimes { get; set; }
@@ -112,7 +122,7 @@ namespace SIT323Assignment1
             file.Close();
 
             //Check file contains all keys
-            Regex logPathRegex = new Regex(@"DEFAULT-LOGFILE");
+            Regex logPathRegex = new Regex(logFilePattern);
             MatchCollection logPathMatch = logPathRegex.Matches(configurationContents);
             if (logPathMatch.Count == 0)
             {
@@ -123,7 +133,7 @@ namespace SIT323Assignment1
                 ConfigurationErrorList.Add(multipleKeyError + logFileKey);
             }
 
-            Regex limitTasksRegex = new Regex(@"LIMITS-TASKS");
+            Regex limitTasksRegex = new Regex(taskLimitPattern);
             MatchCollection limitTasksMatch = limitTasksRegex.Matches(configurationContents);
             if (limitTasksMatch.Count == 0)
             {
@@ -134,7 +144,7 @@ namespace SIT323Assignment1
                 ConfigurationErrorList.Add(multipleKeyError + tasksLimitsKey);
             }
 
-            Regex limitsProcessorsRegex = new Regex(@"LIMITS-PROCESSORS");
+            Regex limitsProcessorsRegex = new Regex(PatternprocessorsLimitPattern);
             MatchCollection limitProcessorsMatch = limitsProcessorsRegex.Matches(configurationContents);
             if (limitProcessorsMatch.Count == 0)
             {
@@ -145,7 +155,7 @@ namespace SIT323Assignment1
                 ConfigurationErrorList.Add(multipleKeyError + processorsLimitsKey);
             }
 
-            Regex limitProcessorFrequenciesRegex = new Regex(@"LIMITS-PROCESSOR-FREQUENCIES");
+            Regex limitProcessorFrequenciesRegex = new Regex(processorFrequencyLimitsPattern);
             MatchCollection limitProcessorsFrequenciesMatch = limitProcessorFrequenciesRegex.Matches(configurationContents);
             if (limitProcessorsFrequenciesMatch.Count == 0)
             {
@@ -156,7 +166,7 @@ namespace SIT323Assignment1
                 ConfigurationErrorList.Add(multipleKeyError + processorsFreqLimitsKey);
             }
 
-            Regex programMaxDurationRegex = new Regex(@"PROGRAM-MAXIMUM-DURATION");
+            Regex programMaxDurationRegex = new Regex(programMaxDurationPattern);
             MatchCollection programMaxDurationMatch = programMaxDurationRegex.Matches(configurationContents);
             if (programMaxDurationMatch.Count == 0)
             {
@@ -167,7 +177,7 @@ namespace SIT323Assignment1
                 ConfigurationErrorList.Add(multipleKeyError + programMaxDurationKey);
             }
 
-            Regex programTasksRegex = new Regex(@"PROGRAM-TASKS");
+            Regex programTasksRegex = new Regex(programTaskPattern);
             MatchCollection programTasksMatch = programTasksRegex.Matches(configurationContents);
             if (programTasksMatch.Count == 0)
             {
@@ -178,7 +188,7 @@ namespace SIT323Assignment1
                 ConfigurationErrorList.Add(multipleKeyError + programTasksKey);
             }
 
-            Regex programProcessorsRegex = new Regex(@"PROGRAM-PROCESSORS");
+            Regex programProcessorsRegex = new Regex(programProcessorsPattern);
             MatchCollection programProcessorsMatch= programProcessorsRegex.Matches(configurationContents);
             if (programProcessorsMatch.Count == 0)
             {
@@ -189,7 +199,7 @@ namespace SIT323Assignment1
                 ConfigurationErrorList.Add(multipleKeyError + programProcessorsKey);
             }
 
-            Regex runtimeRefFrequencyRegex= new Regex(@"RUNTIME-REFERENCE-FREQUENCY");
+            Regex runtimeRefFrequencyRegex= new Regex(runtimeRefFreqPattern);
             MatchCollection runtimeRefFrequencyMatch= runtimeRefFrequencyRegex.Matches(configurationContents);
             if (runtimeRefFrequencyMatch.Count == 0)
             {
@@ -201,7 +211,7 @@ namespace SIT323Assignment1
             }
 
             //Check filename is valid
-            Regex csvFileRegex = new Regex(@".+\.csv$");
+            Regex csvFileRegex = new Regex(csvFilePattern);
             MatchCollection csvFileMatch = csvFileRegex.Matches(ConfigurationFilePath);
             if (csvFileMatch.Count == 0) ConfigurationErrorList.Add(invalidFileError + ConfigurationFilePath);
 
@@ -223,11 +233,11 @@ namespace SIT323Assignment1
             aConfiguration.ProcessorFrequencies = new Dictionary<int, double>();
             aConfiguration.CoefficientValues = new Dictionary<int, int>();
 
-            Regex singleSeperatorRegex = new Regex(@"^.*,.*$");
-            Regex doubleSeperatorRegex = new Regex(@"^.*,.*,.*$");
-            Regex doubleDigitSeperatorRegex = new Regex(@"^\d+,-*\d+\.?\d*$");
-            Regex textDigitSeperatorRegex = new Regex(@"^.+,\d+$");
-            Regex textDoubleDigitSeperatorRegex = new Regex(@"^.+(?:,\d+){2}$");
+            Regex singleSeperatorRegex = new Regex(singleSeperatorPattern);
+            Regex doubleSeperatorRegex = new Regex(doubleSeperatorPattern);
+            Regex doubleDigitSeperatorRegex = new Regex(doubleDigitSeperatorPattern);
+            Regex textDigitSeperatorRegex = new Regex(textDigitSeperatorPattern);
+            Regex textDoubleDigitSeperatorRegex = new Regex(textDoubleDigitSeperatorPattern);
 
             //Begin parsing TAN file
             StreamReader file = new StreamReader(path);
