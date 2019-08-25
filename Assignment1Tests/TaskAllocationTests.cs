@@ -9,7 +9,7 @@ namespace Assignment1Tests
     [TestClass]
     public class TaskAllocationTests
     {
-        const string test1FilePath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test1.tan";
+        const string test1FilePath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Files for Unit Testing\\Test1.tan";
 
         [TestMethod]
         public void ConfigFileTest()
@@ -235,7 +235,7 @@ namespace Assignment1Tests
         public void ValidConfigurationTest()
         {
             //Arrange
-            string configPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test1.csv";
+            string configPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Files for Unit Testing\\Test1.csv";
             bool expected = true;
 
             //Act
@@ -251,7 +251,7 @@ namespace Assignment1Tests
         public void InvalidConfigurationTest1()
         {
             //Arrange
-            string configPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test3.csv";
+            string configPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Files for Unit Testing\\Test3.csv";
             bool expected = false;
 
             //Act
@@ -328,8 +328,8 @@ namespace Assignment1Tests
         public void AllocationEnergyTest1()
         {
             //Arrange
-            string tanPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test1.tan";
-            string configPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test1.csv";
+            string tanPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Files for Unit Testing\\Test1.tan";
+            string configPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Files for Unit Testing\\Test1.csv";
             double expectedEnergy = 155.77;
             List<string> errors = new List<string>();
 
@@ -353,8 +353,8 @@ namespace Assignment1Tests
         public void AllocationRuntimeTest1()
         {
             //Arrange
-            string tanPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test1.tan";
-            string configPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Test1.csv";
+            string tanPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Files for Unit Testing\\Test1.tan";
+            string configPath = "C:\\Users\\Tyson\\source\\repos\\SIT323Assignment1\\Files for Unit Testing\\Test1.csv";
             double expectedTime = 2.61;
             List<string> errors = new List<string>();
 
