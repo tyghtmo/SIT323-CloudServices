@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -63,58 +64,61 @@ namespace SIT323Assignment1
             result = openFileDialog1.ShowDialog();
             if(result == DialogResult.OK)
             {
-                //Process TAN file
-                CompleteErrorList.Add(startTanFile + openFileDialog1.SafeFileName);
-                TaskAllocations.TryParse(openFileDialog1.FileName, out aTaskAllocation);
-                if (aTaskAllocation.AllocationErrorList != null) UpdateErrors(aTaskAllocation.AllocationErrorList);
-                CompleteErrorList.Add(endTanFile + openFileDialog1.SafeFileName);
-
-                if (aTaskAllocation.isValid) fileValiditys += tanFileValid;
-                else fileValiditys += tanFileInvalid;
-
-
-                //Process CONFIG file
-                string configPath = "";
-                if (aTaskAllocation.ConfigPath == null)
-                {
-                    configPath = fileNameMissing;
-                    fileValiditys += csvFileInvalid;
-                }
-                else configPath = aTaskAllocation.ConfigPath;
-                        
-                CompleteErrorList.Add(startCsvFile + configPath);
-                if (aTaskAllocation.ConfigPath != null)
-                {
-                    //Get directory of TAN file and add config path
-                    string directoryPath = Path.GetDirectoryName(openFileDialog1.FileName);
-                    string configFullPath = directoryPath + "\\" + aTaskAllocation.ConfigPath;
-
-                    Configuration.TryParse(configFullPath, out aConfiguration);
-                    if (aConfiguration.ConfigurationErrorList != null) UpdateErrors(aConfiguration.ConfigurationErrorList);
-
-                    if (aTaskAllocation.isValid) fileValiditys += csvFileValid;
-                    else fileValiditys += csvFileInvalid;
-                }
-                CompleteErrorList.Add(endCsvFile + configPath);
-
-                if(aTaskAllocation.isValid == true && aConfiguration.isValid == true)
-                {
-                    allocationsToolStripMenuItem.Enabled = true;
-                }
-                else
-                {
-                    allocationsToolStripMenuItem.Enabled = false;
-                }
-
-                //Update text
-                label1.Text = "";
-                label1.Text += fileValiditys;
-                foreach (Allocation al in aTaskAllocation.SetOfAllocations)
-                {
-                    label1.Text += string.Format(allocationDisplayString, al.ID);
-                    label1.Text += al.MatrixToString();
-                }
+                ProcessTAN();
             }
+        }
+
+        private void ProcessTAN()
+        {
+            
+            //Process TAN file
+            CompleteErrorList.Add(startTanFile + openFileDialog1.SafeFileName);
+            TaskAllocations.TryParse(openFileDialog1.FileName, out aTaskAllocation);
+            if (aTaskAllocation.AllocationErrorList != null) UpdateErrors(aTaskAllocation.AllocationErrorList);
+            CompleteErrorList.Add(endTanFile + openFileDialog1.SafeFileName);
+
+            if (aTaskAllocation.isValid) fileValiditys += tanFileValid;
+            else fileValiditys += tanFileInvalid;
+
+            //Get directory of TAN file and add config path
+            string directoryPath = Path.GetDirectoryName(openFileDialog1.FileName);
+            string configFullPath = directoryPath + "\\" + aTaskAllocation.ConfigPath;
+
+            ProcessConfig(configFullPath);
+
+            if (aTaskAllocation.isValid == true && aConfiguration.isValid == true)
+            {
+                allocationsToolStripMenuItem.Enabled = true;
+            }
+            else
+            {
+                allocationsToolStripMenuItem.Enabled = false;
+            }
+
+            //Update text
+            label1.Text = "";
+            label1.Text += fileValiditys;
+            foreach (Allocation al in aTaskAllocation.SetOfAllocations)
+            {
+                label1.Text += string.Format(allocationDisplayString, al.ID);
+                label1.Text += al.MatrixToString();
+            }
+        }
+
+        private void ProcessConfig(string filePath)
+        {
+            //Process CONFIG file
+           
+
+            CompleteErrorList.Add(startCsvFile + filePath);
+
+            Configuration.TryParse(filePath, out aConfiguration);
+            if (aConfiguration.ConfigurationErrorList != null) UpdateErrors(aConfiguration.ConfigurationErrorList);
+
+            if (aTaskAllocation.isValid) fileValiditys += csvFileValid;
+            else fileValiditys += csvFileInvalid;
+
+            CompleteErrorList.Add(endCsvFile + filePath);
         }
 
         private void ErrorListToolStripMenuItem_Click(object sender, EventArgs e)
@@ -148,32 +152,53 @@ namespace SIT323Assignment1
             label1.Text += fileValiditys;
             double energyMarker = 0;
 
+
             //Calculate allocations
             CompleteErrorList.Add(startAllocations);
             foreach (Allocation al in aTaskAllocation.SetOfAllocations)
             {
-                List<string> errors = new List<string>();
-
-                //get time
-                double time = al.CalculateTime(aConfiguration, out errors);
-                UpdateErrors(errors);
-                string timeString = time.ToString("0.00");
                 
 
-                //get energy
-                double energy = al.CalculateEnergy(aConfiguration, out errors);
-                UpdateErrors(errors);
-                string energyString = energy.ToString("0.00");
+                    List<string> errors = new List<string>();
 
-                if (energyMarker == 0) energyMarker = energy;
-                if (energy != energyMarker) errors.Add(string.Format(diffEnergyError, al.ID, al.AllocationEnergy, energyMarker));
-                UpdateErrors(errors);
+                    //get time
 
-                //update text
-                label1.Text += string.Format(allocationTimeEnergyDisplay, al.ID, timeString, energyString);
-                label1.Text += al.MatrixToString();
+                    double time = al.CalculateTime(aConfiguration, out errors);
+                    UpdateErrors(errors);
+                    string timeString = time.ToString("0.00");
+
+                    //get energy
+                    double energy = al.CalculateEnergy(aConfiguration, out errors);
+                    UpdateErrors(errors);
+
+                    string energyString = energy.ToString("0.00");
+
+                    if (energyMarker == 0) energyMarker = energy;
+                    if (energy != energyMarker) errors.Add(string.Format(diffEnergyError, al.ID, al.AllocationEnergy, energyMarker));
+                    UpdateErrors(errors);
+
+                    //update text
+                    label1.Text += string.Format(allocationTimeEnergyDisplay, al.ID, timeString, energyString);
+                    label1.Text += al.MatrixToString();
+                
             }
+
             CompleteErrorList.Add(endAllocations);
+            allocationsToolStripMenuItem.Enabled = false;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string source = comboBox1.Text;
+            if (source != null)
+            {
+                string[] substrings = source.Split('/');
+                string destination = substrings[substrings.Length - 1];
+                WebClient webclient = new WebClient();
+                webclient.DownloadFile(source, destination);
+
+               ProcessConfig(destination);
+            }
         }
     }
 }

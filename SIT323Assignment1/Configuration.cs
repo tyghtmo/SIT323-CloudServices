@@ -22,7 +22,7 @@ namespace SIT323Assignment1
         private const string invalidLineError = "Invalid line in CSV file: ";
         private const string stringToIntError = "String to Int error: ";
         private const string missingSeperatorError = "Invalid seperator: ";
-        private const string invalidFileError = "File type is invalid, must be .csv: ";
+        private const string invalidFileError = "File type is invalid, must be .csv or .txt: ";
         private const string commentLineError = "Invalid comment on line: ";
         private const string invalidSeperatorError = "Invalid seperator on line: ";
         private const string invalidIDError = "{0} with this ID already exists: {1}";
@@ -36,11 +36,11 @@ namespace SIT323Assignment1
         private const string programTaskPattern = @"PROGRAM-TASKS";
         private const string programProcessorsPattern = @"PROGRAM-PROCESSORS";
         private const string runtimeRefFreqPattern = @"RUNTIME-REFERENCE-FREQUENCY";
-        private const string csvFilePattern = @".+\.csv$";
+        private const string csvFilePattern = @"(.csv|.txt)$";
         private const string singleSeperatorPattern = @"^.*,.*$";
         private const string doubleSeperatorPattern = @"^.*,.*,.*$";
         private const string doubleDigitSeperatorPattern = @"^\d+,-*\d+\.?\d*$";
-        private const string textDigitSeperatorPattern = @"^.+,\d+$";
+        private const string textDigitSeperatorPattern = @"^.+,\d+(\.\d+)?$";
         private const string textDoubleDigitSeperatorPattern = @"^.+(?:,\d+){2}$";
         #endregion
 
@@ -69,7 +69,7 @@ namespace SIT323Assignment1
         public int ProcessorsMax { get; set; }
         public double ProcessorsFrequencyMin { get; set; }
         public double ProcessorsFrequencyMax { get; set; }
-        public int ProgramMaxDuration { get; set; }
+        public double ProgramMaxDuration { get; set; }
         public int ProgramTasks { get; set; }
         public int ProgramProcessors { get; set; }
         public double RuntimeReferenceFrequency { get; set; }
@@ -340,7 +340,7 @@ namespace SIT323Assignment1
                     string[] substrings = line.Split(delimiter);
                     if (textDigitSeperatorMatch.Count == 1 && substrings[0] == aConfiguration.programMaxDurationKey)
                     {
-                        aConfiguration.ProgramMaxDuration = Int32.Parse(substrings[1]);
+                        aConfiguration.ProgramMaxDuration = double.Parse(substrings[1]);
                     }
                     else if (singleSeperatorMatch.Count == 0)
                     {
