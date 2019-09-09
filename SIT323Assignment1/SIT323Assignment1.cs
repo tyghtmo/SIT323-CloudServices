@@ -108,9 +108,9 @@ namespace SIT323Assignment1
         private void ProcessConfig(string filePath)
         {
             //Process CONFIG file
-           
 
-            CompleteErrorList.Add(startCsvFile + filePath);
+            string fileName = Path.GetFileName(filePath);
+            CompleteErrorList.Add(startCsvFile + fileName);
 
             Configuration.TryParse(filePath, out aConfiguration);
             if (aConfiguration.ConfigurationErrorList != null) UpdateErrors(aConfiguration.ConfigurationErrorList);
@@ -118,7 +118,7 @@ namespace SIT323Assignment1
             if (aTaskAllocation.isValid) fileValiditys += csvFileValid;
             else fileValiditys += csvFileInvalid;
 
-            CompleteErrorList.Add(endCsvFile + filePath);
+            CompleteErrorList.Add(endCsvFile + fileName);
         }
 
         private void ErrorListToolStripMenuItem_Click(object sender, EventArgs e)
@@ -189,11 +189,17 @@ namespace SIT323Assignment1
 
         private void button1_Click(object sender, EventArgs e)
         {
+            //Clean GUI and Errors
+            CompleteErrorList.Clear();
+            label1.Text = "";
+            fileValiditys = "";
+            allocationsToolStripMenuItem.Enabled = false;
+
             string source = comboBox1.Text;
             if (source != null)
             {
-                string[] substrings = source.Split('/');
-                string destination = substrings[substrings.Length - 1];
+
+                string destination = Path.GetFileName(source);
                 WebClient webclient = new WebClient();
                 webclient.DownloadFile(source, destination);
 
