@@ -110,6 +110,24 @@ namespace SIT323Assignment1
 
         }
 
+        public double[][] GetTaskProcessorTimeMatrix()
+        {
+            double[][] TPTMatrix = new double[ProgramProcessors][];
+
+            for (int processor = 0; processor < ProgramProcessors; processor++)
+            {
+                TPTMatrix[processor] = new double[ProgramTasks];
+                for(int task = 0; task < ProgramTasks; task++)
+                {
+                    double taskProcessorTime = TaskRuntimes[task + 1] * (RuntimeReferenceFrequency / ProcessorFrequencies[processor + 1]);
+                    TPTMatrix[processor][task] = taskProcessorTime;
+                }
+            }
+
+
+            return TPTMatrix;
+        }
+
         /// <summary>
         /// Validates that all keys are present and the filename is correct
         /// </summary>
