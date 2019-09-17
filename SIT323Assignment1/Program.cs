@@ -18,8 +18,7 @@ namespace SIT323Assignment1
             //TODO: remove
             Configuration aConf = new Configuration();
             Configuration.TryParse(@"C: \Users\Tyson\source\repos\SIT323Assignment1\Files for Unit Testing\Test1.csv", out aConf);
-            ConfigurationData ConfData = new ConfigurationData();
-            ConfData.LogFilePath = "1000";
+            ConfigurationData ConfData = new ConfigurationData(aConf);
 
             LocalConfigurationWebService.ServiceClient localWS = new LocalConfigurationWebService.ServiceClient();
             localWS.GetAllocations(ConfData);

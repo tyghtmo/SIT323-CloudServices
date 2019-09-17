@@ -98,7 +98,7 @@
     <None Include="Connected Services\LocalConfigurationWebService\Service2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\LocalConfigurationWebService\Service21.xsd">
+    <None Include="Connected Services\LocalConfigurationWebService\Service3.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Properties\Settings.settings">
