@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using ConfigurationDataLibrary;
 
 namespace SIT323Assignment1
 {
@@ -84,7 +85,10 @@ namespace SIT323Assignment1
             string directoryPath = Path.GetDirectoryName(openFileDialog1.FileName);
             string configFullPath = directoryPath + "\\" + aTaskAllocation.ConfigPath;
 
-            ProcessConfig(configFullPath);
+            if (aTaskAllocation.ConfigPath != null)
+            {
+                ProcessConfig(configFullPath);
+            }
 
             if (aTaskAllocation.isValid == true && aConfiguration.isValid == true)
             {
@@ -115,7 +119,7 @@ namespace SIT323Assignment1
             Configuration.TryParse(filePath, out aConfiguration);
             if (aConfiguration.ConfigurationErrorList != null) UpdateErrors(aConfiguration.ConfigurationErrorList);
 
-            if (aTaskAllocation.isValid) fileValiditys += csvFileValid;
+            if (aConfiguration.isValid) fileValiditys += csvFileValid;
             else fileValiditys += csvFileInvalid;
 
             CompleteErrorList.Add(endCsvFile + fileName);
@@ -203,8 +207,25 @@ namespace SIT323Assignment1
                 WebClient webclient = new WebClient();
                 webclient.DownloadFile(source, destination);
 
-               ProcessConfig(destination);
+
+                string fullConfigPath = Path.GetDirectoryName(Application.ExecutablePath) + "\\" + destination;
+                ProcessConfig(fullConfigPath);
+
+                //Send to WCF
+                ConfigurationData ConfData = new ConfigurationData(aConfiguration);
+                LocalConfigurationWebService.ServiceClient localWS = new LocalConfigurationWebService.ServiceClient();
+                string[] allocations = localWS.GetAllocations(ConfData);
+
+                //Update GUI
+                label1.Text += fileValiditys;
+
+                foreach(string s in allocations)
+                {
+                    label1.Text += s + "\n";
+                }
             }
+
+            
         }
     }
 }

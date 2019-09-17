@@ -13,6 +13,6 @@ public interface IService
 {
 
     [OperationContract]
-	string GetAllocations(ConfigurationData configData);
+    List<string> GetAllocations(ConfigurationData configData);
 
 }

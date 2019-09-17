@@ -92,7 +92,7 @@
             // 
             this.allocationsToolStripMenuItem.Enabled = false;
             this.allocationsToolStripMenuItem.Name = "allocationsToolStripMenuItem";
-            this.allocationsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.allocationsToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.allocationsToolStripMenuItem.Text = "Allocations";
             this.allocationsToolStripMenuItem.Click += new System.EventHandler(this.allocationsToolStripMenuItem_Click);
             // 
@@ -153,9 +153,9 @@
             // 
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
-            "http://sit323.azurewebsites.net/Task2/TestA.txt",
-            "http://sit323.azurewebsites.net/Task2/TestB.txt",
-            "http://sit323.azurewebsites.net/Task2/TestC.txt"});
+            "https://sit323sa.blob.core.windows.net/at2/TestA.txt",
+            "https://sit323sa.blob.core.windows.net/at2/TestB.txt",
+            "https://sit323sa.blob.core.windows.net/at2/TestC.txt"});
             this.comboBox1.Location = new System.Drawing.Point(15, 30);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(692, 21);

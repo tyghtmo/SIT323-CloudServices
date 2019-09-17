@@ -15,16 +15,15 @@ namespace SIT323Assignment1
         [STAThread]
         static void Main()
         {
-            //TODO: remove
+            /*//TODO: remove
             Configuration aConf = new Configuration();
             Configuration.TryParse(@"C: \Users\Tyson\source\repos\SIT323Assignment1\Files for Unit Testing\Test1.csv", out aConf);
             ConfigurationData ConfData = new ConfigurationData(aConf);
 
             LocalConfigurationWebService.ServiceClient localWS = new LocalConfigurationWebService.ServiceClient();
-            localWS.GetAllocations(ConfData);
             string al = localWS.GetAllocations(ConfData);
-
-            //Console.WriteLine(al);
+            Console.WriteLine(al);
+            */
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

@@ -16,10 +16,10 @@ namespace SIT323Assignment1.LocalConfigurationWebService {
     public interface IService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetAllocations", ReplyAction="http://tempuri.org/IService/GetAllocationsResponse")]
-        string GetAllocations(ConfigurationDataLibrary.ConfigurationData configData);
+        string[] GetAllocations(ConfigurationDataLibrary.ConfigurationData configData);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetAllocations", ReplyAction="http://tempuri.org/IService/GetAllocationsResponse")]
-        System.Threading.Tasks.Task<string> GetAllocationsAsync(ConfigurationDataLibrary.ConfigurationData configData);
+        System.Threading.Tasks.Task<string[]> GetAllocationsAsync(ConfigurationDataLibrary.ConfigurationData configData);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -49,11 +49,11 @@ namespace SIT323Assignment1.LocalConfigurationWebService {
                 base(binding, remoteAddress) {
         }
         
-        public string GetAllocations(ConfigurationDataLibrary.ConfigurationData configData) {
+        public string[] GetAllocations(ConfigurationDataLibrary.ConfigurationData configData) {
             return base.Channel.GetAllocations(configData);
         }
         
-        public System.Threading.Tasks.Task<string> GetAllocationsAsync(ConfigurationDataLibrary.ConfigurationData configData) {
+        public System.Threading.Tasks.Task<string[]> GetAllocationsAsync(ConfigurationDataLibrary.ConfigurationData configData) {
             return base.Channel.GetAllocationsAsync(configData);
         }
     }
