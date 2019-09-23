@@ -15,7 +15,6 @@ public class Service : IService
     [DataMember]
     public ConfigurationData configurationData;
 
-    private int AllocationIDCounter = 1;
 
 	public List<string> GetAllocations(ConfigurationData configData)
 	{
@@ -36,22 +35,25 @@ public class Service : IService
         int tasks = taskProcessorTimes.GetLength(1);
 
         double[,] allocation = new double[processors, tasks];
-        List<string> goodAllocations = new List<string>();
+        List<double[,]> goodAllocations = new List<double[,]>();
 
         double time = 0;
         double energy = 0;
 
         Random randNo = new Random();
-        double currentBest = double.MaxValue;
+        double bestTime = double.MaxValue;
+        double bestEnergy = double.MaxValue;
 
-        while (stopwatch.ElapsedMilliseconds <= 30000)
+        int allocationCount = 0;
+
+        while (stopwatch.ElapsedMilliseconds <= configurationData.AlgorithmMaxRuntime)
         {
             
             allocation = new double[processors, tasks];
 
             for (int i = 0; i < tasks; i++)
             {
-                int selectedProcessor = randNo.Next(0, 3);
+                int selectedProcessor = randNo.Next(0, processors);
                 allocation[selectedProcessor, i] = taskProcessorTimes[selectedProcessor, i];
 
             }
@@ -59,40 +61,76 @@ public class Service : IService
             time = CalculateTime(allocation);
             energy = CalculateEnergy(allocation);
 
-            if(time < currentBest)
+            if(energy < bestEnergy && time < configurationData.ProgramMaxDuration)
             {
                 goodAllocations.Clear();
-                goodAllocations.Add(MatrixToString(allocation));
-                currentBest = time;
+                goodAllocations.Add(allocation);
+                bestTime = time;
+                bestEnergy = energy;
             }
-            else if(time == currentBest)
+            else if(energy == bestEnergy && time < configurationData.ProgramMaxDuration)
             {
-                goodAllocations.Add(MatrixToString(allocation));
+                goodAllocations.Add(allocation);
             }
 
+            allocationCount++;
+        }
+
+        
+
+        List<string> stringMatrixList = new List<string>();
+
+        //Convert task / processor time matrix to 1 0 matrix.
+        for(int i = 0; i < goodAllocations.Count; i++)
+        {
+            double allocationTime = CalculateTime(goodAllocations[i]);
+            double allocationEnergy = CalculateEnergy(goodAllocations[i]);
+            stringMatrixList.Add(ConvertTo10Matrix(MatrixToString(goodAllocations[i]), allocationTime, allocationEnergy, processors, tasks));
         }
 
         //Remove duplicates and convert back to list
-        ICollection<string> noDuplicates = new HashSet<string>(goodAllocations);
-        List<string> allocations = noDuplicates.ToList<string>();
-
-        //Convert task / processor time matrix to 1 0 matrix.
-        for(int i = 0; i < allocations.Count; i++)
-        {
-            allocations[i] = ConvertTo10Matrix(allocations[i], time, energy, processors, tasks);
-        }
+        ICollection<string> noDuplicates = new HashSet<string>(stringMatrixList);
+        List<string> allocations = noDuplicates.ToList();
 
         return allocations;
     }
 
     private double CalculateEnergy(double[,] allocation)
     {
-        return 1;
+        double energy = 0;
+
+        Dictionary<int, double> processorTimes = new Dictionary<int, double>();
+
+        double c0 = configurationData.CoefficientValues[0];
+        double c1 = configurationData.CoefficientValues[1];
+        double c2 = configurationData.CoefficientValues[2];
+
+        //get processor times
+        for(int processor = 0; processor < allocation.GetLength(0); processor++)
+        {
+            double processorTime = 0;
+            for(int task = 0; task < allocation.GetLength(1); task++)
+            {
+                processorTime += allocation[processor, task];
+            }
+            processorTimes.Add(processor + 1, processorTime);
+        }
+
+        
+        foreach (KeyValuePair<int, double> time in processorTimes)
+        {
+
+            double f = configurationData.ProcessorFrequencies[time.Key];
+            energy += time.Value * (c2 * (f * f) + c1 * f + c0);
+
+        }
+
+        return energy;
     }
 
     private string ConvertTo10Matrix(string taskProcessorMatrix, double time, double energy, int processors, int tasks)
     {
-        string matrixStr = string.Format("Allocation ID = {0}, Time = {1:0.00}, Energy = {2:0.00}\n", AllocationIDCounter++, time, energy);
+        string matrixStr = string.Format("Time = {0:0.00}, Energy = {1:0.00}\n", time, energy);
         List<string> processorList = taskProcessorMatrix.Split('\n').ToList<string>();
         int[,] completeMatrix = new int[processors, tasks];
 

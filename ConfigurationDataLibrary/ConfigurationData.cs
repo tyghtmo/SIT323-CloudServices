@@ -11,7 +11,7 @@ namespace ConfigurationDataLibrary
     [Serializable]
     public class ConfigurationData
     {
-
+        public decimal AlgorithmMaxRuntime { get; set; }
         public string LogFilePath { get; set; }
         
         public int ProgramTasks { get; set; }

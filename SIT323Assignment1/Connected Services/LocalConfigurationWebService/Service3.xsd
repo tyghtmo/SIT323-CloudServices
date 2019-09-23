@@ -3,6 +3,7 @@
   <xs:import schemaLocation="http://localhost:57219/Service.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
   <xs:complexType name="ConfigurationData">
     <xs:sequence>
+      <xs:element name="_x003C_AlgorithmMaxRuntime_x003E_k__BackingField" type="xs:decimal" />
       <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" name="_x003C_CoefficientValues_x003E_k__BackingField" nillable="true" type="q1:ArrayOfKeyValueOfintdouble" />
       <xs:element name="_x003C_LogFilePath_x003E_k__BackingField" nillable="true" type="xs:string" />
       <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" name="_x003C_ProcessorFrequencies_x003E_k__BackingField" nillable="true" type="q2:ArrayOfKeyValueOfintdouble" />

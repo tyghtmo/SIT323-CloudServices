@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using ConfigurationDataLibrary;
+using System.Threading;
 
 namespace SIT323Assignment1
 {
@@ -21,6 +22,7 @@ namespace SIT323Assignment1
         private TaskAllocations aTaskAllocation = new TaskAllocations();
         private Configuration aConfiguration = new Configuration();
         string fileValiditys = "";
+
 
         //constants
         private const string diffEnergyError = "Allocation ID: {0} has a different energy value {1:0.00} to Allocation ID: 1 with energy {2:0.00}";
@@ -193,6 +195,9 @@ namespace SIT323Assignment1
 
         private void button1_Click(object sender, EventArgs e)
         {
+            progressBar1.Value = 0;
+            decimal maxRuntime = numericUpDown1.Value * 1000;
+
             //Clean GUI and Errors
             CompleteErrorList.Clear();
             label1.Text = "";
@@ -213,19 +218,35 @@ namespace SIT323Assignment1
 
                 //Send to WCF
                 ConfigurationData ConfData = new ConfigurationData(aConfiguration);
+                ConfData.AlgorithmMaxRuntime = maxRuntime;
                 LocalConfigurationWebService.ServiceClient localWS = new LocalConfigurationWebService.ServiceClient();
-                string[] allocations = localWS.GetAllocations(ConfData);
+                localWS.InnerChannel.OperationTimeout = new TimeSpan(0, 5, 0);
+
+                Task<string[]> allocationsTask = localWS.GetAllocationsAsync(ConfData);
+
+                int interval = 5 + ((Convert.ToInt32(numericUpDown1.Value) - 1) * 10);
+                while (!allocationsTask.IsCompleted)
+                {
+                    Thread.Sleep(interval);
+                    progressBar1.Increment(1);
+                }
+                
+                string[] allocations = allocationsTask.Result;
 
                 //Update GUI
                 label1.Text += fileValiditys;
+                int idCounter = 1;
 
+                
                 foreach(string s in allocations)
                 {
-                    label1.Text += s + "\n";
+                    label1.Text += "Allocation ID = "+ idCounter + ", " + s + "\n";
+                    idCounter++;
                 }
             }
 
             
         }
+
     }
 }
