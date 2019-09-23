@@ -216,29 +216,34 @@ namespace SIT323Assignment1
                 string fullConfigPath = Path.GetDirectoryName(Application.ExecutablePath) + "\\" + destination;
                 ProcessConfig(fullConfigPath);
 
-                //Send to WCF
+                //Send to ALG1
                 ConfigurationData ConfData = new ConfigurationData(aConfiguration);
                 ConfData.AlgorithmMaxRuntime = maxRuntime;
-                LocalConfigurationWebService.ServiceClient localWS = new LocalConfigurationWebService.ServiceClient();
+
+                LocalALG1WebService.ServiceClient localWS = new LocalALG1WebService.ServiceClient();
                 localWS.InnerChannel.OperationTimeout = new TimeSpan(0, 5, 0);
 
-                Task<string[]> allocationsTask = localWS.GetAllocationsAsync(ConfData);
+                LocalALG2WebService.ServiceClient LocalALG2 = new LocalALG2WebService.ServiceClient();
+
+                Task<string[]> ALG1Task = localWS.GetAllocationsAsync(ConfData);
+                Task<string> ALG2Task = LocalALG2.GetAllocationsAsync(ConfData);
 
                 int interval = 5 + ((Convert.ToInt32(numericUpDown1.Value) - 1) * 10);
-                while (!allocationsTask.IsCompleted)
+                while (!ALG1Task.IsCompleted)
                 {
                     Thread.Sleep(interval);
                     progressBar1.Increment(1);
                 }
                 
-                string[] allocations = allocationsTask.Result;
+                string[] ALG1allocations = ALG1Task.Result;
+                string ALG2allocations = ALG2Task.Result;
 
                 //Update GUI
                 label1.Text += fileValiditys;
                 int idCounter = 1;
 
                 
-                foreach(string s in allocations)
+                foreach(string s in ALG1allocations)
                 {
                     label1.Text += "Allocation ID = "+ idCounter + ", " + s + "\n";
                     idCounter++;

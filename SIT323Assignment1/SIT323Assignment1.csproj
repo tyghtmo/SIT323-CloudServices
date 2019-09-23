@@ -53,7 +53,12 @@
   <ItemGroup>
     <Compile Include="Allocation.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="Connected Services\LocalConfigurationWebService\Reference.cs">
+    <Compile Include="Connected Services\LocalALG1WebService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\LocalALG2WebService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -88,17 +93,30 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Connected Services\LocalConfigurationWebService\Service.wsdl" />
-    <None Include="Connected Services\LocalConfigurationWebService\Service.xsd">
+    <None Include="Connected Services\LocalALG1WebService\Service.wsdl" />
+    <None Include="Connected Services\LocalALG1WebService\Service.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\LocalConfigurationWebService\Service1.xsd">
+    <None Include="Connected Services\LocalALG1WebService\Service1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\LocalConfigurationWebService\Service2.xsd">
+    <None Include="Connected Services\LocalALG1WebService\Service2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\LocalConfigurationWebService\Service3.xsd">
+    <None Include="Connected Services\LocalALG1WebService\Service3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\LocalALG2WebService\Service.wsdl" />
+    <None Include="Connected Services\LocalALG2WebService\Service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\LocalALG2WebService\Service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\LocalALG2WebService\Service2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\LocalALG2WebService\Service3.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Properties\Settings.settings">
@@ -118,19 +136,35 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Connected Services\LocalConfigurationWebService\" />
+    <WCFMetadataStorage Include="Connected Services\LocalALG1WebService\" />
+    <WCFMetadataStorage Include="Connected Services\LocalALG2WebService\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Connected Services\LocalConfigurationWebService\Service.disco" />
+    <None Include="Connected Services\LocalALG1WebService\Service.disco" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Connected Services\LocalConfigurationWebService\configuration91.svcinfo" />
+    <None Include="Connected Services\LocalALG1WebService\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Connected Services\LocalConfigurationWebService\configuration.svcinfo" />
+    <None Include="Connected Services\LocalALG1WebService\configuration.svcinfo" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Connected Services\LocalConfigurationWebService\Reference.svcmap">
+    <None Include="Connected Services\LocalALG1WebService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\LocalALG2WebService\Service.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\LocalALG2WebService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\LocalALG2WebService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\LocalALG2WebService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
