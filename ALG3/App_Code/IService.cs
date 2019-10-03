@@ -12,6 +12,6 @@ using System.Text;
 public interface IService
 {
 
-	[OperationContract]
+    [OperationContract]
     List<string> GetAllocations(ConfigurationData configData);
 }

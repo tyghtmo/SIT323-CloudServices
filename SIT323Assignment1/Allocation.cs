@@ -42,19 +42,11 @@ namespace SIT323Assignment1
 
             for (int i = 0 ; i < rows; i++)
             {
-                for(int j = 0; j < columns; j++)
+                string[] substrings = matrix[i].Split(',');
+                for (int j = 0; j < columns; j++)
                 {
-                    string[] substrings = matrix[i].Split(',');
-                    int input = ToInt32(substrings[j]);
-                    if (input == -1)
-                    {
-                       //error
-                    }
-                    else
-                    {
-                        AllocationMatrix[i,j] = input;
-                    }
-                   
+                    
+                    AllocationMatrix[i, j] = Double.Parse(substrings[j]);
                 }
             }
         }
@@ -77,7 +69,10 @@ namespace SIT323Assignment1
 
         public override string ToString()
         {
-            string str = "ID: " + ID + "\n";
+            string str = "Allocation ID = " + ID;
+            if (AllocationTime > 0) str += String.Format(", Time = {0:0.00}", AllocationTime);
+            if (AllocationEnergy > 0) str += String.Format(", Energy = {0:0.00}", AllocationEnergy);
+            str += "\n";
 
             for (int i = 0; i < AllocationMatrix.GetLength(0); i++)
             {
@@ -156,6 +151,40 @@ namespace SIT323Assignment1
             return isValid;
         }
 
+        public bool ValidateAllocation()
+        {
+            //Check ID is valid
+            if (ID < 0)
+            {
+                isValid = false;
+            }
+
+            int rows = AllocationMatrix.GetLength(0);
+            int columns = AllocationMatrix.GetLength(1);
+
+            for (int tasks = 0; tasks < columns; tasks++)
+            {
+                double columnSum = 0;
+                for (int processors = 0; processors < rows; processors++)
+                {
+                    //Add each column to determine if there is more or less than one 1 
+                    columnSum += AllocationMatrix[processors, tasks];
+                    string log = string.Format("Task: {0}   Pro: {1}  Sum: {2}", tasks, processors, columnSum);
+                }
+
+
+                if (columnSum != 1)
+                {
+                    //errors.Add(invalidAllocationError + ToString());
+                    isValid = false;
+
+                }
+
+            }
+
+            return isValid;
+        }
+
         public double CalculateTime(Configuration aconfiguration, out List<string> errors)
         {
             errors = new List<string>();
@@ -198,6 +227,45 @@ namespace SIT323Assignment1
             return time;
         }
 
+        public double CalculateTime(Configuration aconfiguration)
+        {
+            double time = 0;
+            double[,] runtimeMatrix = AllocationMatrix.Clone() as double[,];
+            int rows = runtimeMatrix.GetLength(0);
+            int columns = runtimeMatrix.GetLength(1);
+
+            //add runtimes to allocation matrix
+            if (aconfiguration.TaskRuntimes != null)
+            {
+                foreach (KeyValuePair<int, double> task in aconfiguration.TaskRuntimes)
+                {
+                    for (int processors = 0; processors < rows; processors++)
+                    {
+                        if (runtimeMatrix[processors, (task.Key - 1)] == 1)
+                        {
+                            runtimeMatrix[processors, task.Key - 1] = task.Value;
+                        }
+                    }
+                }
+
+                //Calculate time for each processor
+                for (int processors = 0; processors < rows; processors++)
+                {
+                    double rowSum = 0;
+                    for (int tasks = 0; tasks < columns; tasks++)
+                    {
+                        rowSum += runtimeMatrix[processors, tasks];
+                    }
+                    double processorTime = rowSum * (aconfiguration.RuntimeReferenceFrequency / aconfiguration.ProcessorFrequencies[processors + 1]);
+                    processorTimes.Add(processors + 1, processorTime);
+                    if (processorTime > time) time = processorTime;
+                }
+            }
+
+            AllocationTime = time;
+            return time;
+        }
+
         public double CalculateEnergy(Configuration aConfiguration, out List<string> errors)
         {
             errors = new List<string>();
@@ -213,6 +281,26 @@ namespace SIT323Assignment1
                 double f = aConfiguration.ProcessorFrequencies[time.Key];
                 energy += time.Value * (c2 * (f * f) + c1 * f + c0);
                 
+            }
+
+            AllocationEnergy = energy;
+            return energy;
+        }
+
+        public double CalculateEnergy(Configuration aConfiguration)
+        {
+            double energy = 0;
+
+            double c0 = aConfiguration.CoefficientValues[0];
+            double c1 = aConfiguration.CoefficientValues[1];
+            double c2 = aConfiguration.CoefficientValues[2];
+
+            foreach (KeyValuePair<int, double> time in processorTimes)
+            {
+
+                double f = aConfiguration.ProcessorFrequencies[time.Key];
+                energy += time.Value * (c2 * (f * f) + c1 * f + c0);
+
             }
 
             AllocationEnergy = energy;

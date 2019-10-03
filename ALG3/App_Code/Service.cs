@@ -10,7 +10,7 @@ using ConfigurationDataLibrary;
 
 // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service" in code, svc and config file together.
 [DataContract]
-public class ALG2Service : IService
+public class ALG3Service : IService
 {
     [DataMember]
     public ConfigurationData configurationData;
@@ -127,9 +127,9 @@ public class ALG2Service : IService
                 //Compare energy of allocation to goodAllocations
                 time = CalculateTime(allocation);
                 energy = CalculateEnergy(allocation);
-                
 
-                if(energy < bestEnergy && time < configurationData.ProgramMaxDuration)
+
+                if (energy < bestEnergy && time < configurationData.ProgramMaxDuration)
                 {
                     goodAllocations.Clear();
                     goodAllocations.Add(allocation);
@@ -139,7 +139,7 @@ public class ALG2Service : IService
                 {
                     goodAllocations.Add(allocation);
                 }
-            }                      
+            }
         }
         stopwatch.Stop();
 

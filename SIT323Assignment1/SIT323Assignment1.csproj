@@ -63,6 +63,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Connected Services\LocalALG3WebService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="ErrorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -119,6 +124,19 @@
     <None Include="Connected Services\LocalALG2WebService\Service3.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Connected Services\LocalALG3WebService\ALG3Service.wsdl" />
+    <None Include="Connected Services\LocalALG3WebService\Service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\LocalALG3WebService\Service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\LocalALG3WebService\Service2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\LocalALG3WebService\Service3.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -138,6 +156,7 @@
   <ItemGroup>
     <WCFMetadataStorage Include="Connected Services\LocalALG1WebService\" />
     <WCFMetadataStorage Include="Connected Services\LocalALG2WebService\" />
+    <WCFMetadataStorage Include="Connected Services\LocalALG3WebService\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Connected Services\LocalALG1WebService\Service.disco" />
@@ -165,6 +184,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Connected Services\LocalALG2WebService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\LocalALG3WebService\Service.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\LocalALG3WebService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\LocalALG3WebService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\LocalALG3WebService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

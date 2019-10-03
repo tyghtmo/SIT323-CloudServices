@@ -8,11 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SIT323Assignment1.LocalALG2WebService {
+namespace SIT323Assignment1.LocalALG3WebService {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="LocalALG2WebService.IService")]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="LocalALG3WebService.IService")]
     public interface IService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetAllocations", ReplyAction="http://tempuri.org/IService/GetAllocationsResponse")]
@@ -23,12 +23,12 @@ namespace SIT323Assignment1.LocalALG2WebService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IServiceChannel : SIT323Assignment1.LocalALG2WebService.IService, System.ServiceModel.IClientChannel {
+    public interface IServiceChannel : SIT323Assignment1.LocalALG3WebService.IService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class ServiceClient : System.ServiceModel.ClientBase<SIT323Assignment1.LocalALG2WebService.IService>, SIT323Assignment1.LocalALG2WebService.IService {
+    public partial class ServiceClient : System.ServiceModel.ClientBase<SIT323Assignment1.LocalALG3WebService.IService>, SIT323Assignment1.LocalALG3WebService.IService {
         
         public ServiceClient() {
         }

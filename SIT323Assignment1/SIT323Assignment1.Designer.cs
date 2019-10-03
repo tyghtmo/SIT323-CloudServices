@@ -164,6 +164,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(692, 21);
             this.comboBox1.TabIndex = 3;
+            this.comboBox1.Text = "https://sit323sa.blob.core.windows.net/at2/TestA.txt";
             // 
             // progressBar1
             // 
@@ -183,6 +184,11 @@
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(62, 20);
             this.numericUpDown1.TabIndex = 5;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // label2
             // 

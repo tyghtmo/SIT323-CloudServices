@@ -10,7 +10,7 @@ using ConfigurationDataLibrary;
 
 // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service" in code, svc and config file together.
 [DataContract]
-public class Service : IService
+public class ALG1Service : IService
 {
     [DataMember]
     public ConfigurationData configurationData;
@@ -41,7 +41,6 @@ public class Service : IService
         double energy = 0;
 
         Random randNo = new Random();
-        double bestTime = double.MaxValue;
         double bestEnergy = double.MaxValue;
 
         int allocationCount = 0;
@@ -65,7 +64,6 @@ public class Service : IService
             {
                 goodAllocations.Clear();
                 goodAllocations.Add(allocation);
-                bestTime = time;
                 bestEnergy = energy;
             }
             else if(energy == bestEnergy && time < configurationData.ProgramMaxDuration)
@@ -76,7 +74,7 @@ public class Service : IService
             allocationCount++;
         }
 
-        
+        stopwatch.Stop();
 
         List<string> stringMatrixList = new List<string>();
 
@@ -85,7 +83,7 @@ public class Service : IService
         {
             double allocationTime = CalculateTime(goodAllocations[i]);
             double allocationEnergy = CalculateEnergy(goodAllocations[i]);
-            stringMatrixList.Add(ConvertTo10Matrix(MatrixToString(goodAllocations[i]), allocationTime, allocationEnergy, processors, tasks));
+            stringMatrixList.Add(MatrixToString(goodAllocations[i]));
         }
 
         //Remove duplicates and convert back to list
@@ -128,36 +126,24 @@ public class Service : IService
         return energy;
     }
 
-    private string ConvertTo10Matrix(string taskProcessorMatrix, double time, double energy, int processors, int tasks)
+    private double[,] ConvertToBinaryMatrix(double[,] allocation)
     {
-        string matrixStr = string.Format("Time = {0:0.00}, Energy = {1:0.00}\n", time, energy);
-        List<string> processorList = taskProcessorMatrix.Split('\n').ToList<string>();
-        int[,] completeMatrix = new int[processors, tasks];
+        int rows = allocation.GetLength(0);
+        int columns = allocation.GetLength(1);
+        double[,] oneZeroMatrix = new double[rows, columns];
 
-        for(int i = 0; i < processorList.Count; i++)
+
+        for (int i = 0; i < rows; i++)
         {
-            List<string> taskList = processorList[i].Split(',').ToList<string>();
-
-            for(int j = 0; j < taskList.Count; j++)
+            for (int j = 0; j < columns; j++)
             {
-                if (taskList[j] != "")
-                {
-                    if(double.Parse(taskList[j]) == 0)
-                    {
-                        completeMatrix[i, j] = 0;
-                    }
-                    else
-                    {
-                        completeMatrix[i, j] = 1;
-                    }
-                }
+                if (allocation[i, j] > 0) oneZeroMatrix[i, j] = 1;
+                else oneZeroMatrix[i, j] = 0;
             }
 
         }
 
-        matrixStr += MatrixToString(completeMatrix);
-
-        return matrixStr;
+        return oneZeroMatrix;
     }
 
     private double CalculateTime(double[,] allocation)
@@ -202,41 +188,35 @@ public class Service : IService
 
     private string MatrixToString(double[,] matrix)
     {
-        string str = "";
-
+        //Change numbers to 1 or 0
         for (int i = 0; i < matrix.GetLength(0); i++)
         {
             for (int j = 0; j < matrix.GetLength(1); j++)
             {
-                str += String.Format("{0:0.00}, ", matrix[i, j]);
+                if (matrix[i, j] > 0) matrix[i, j] = 1;
+                else matrix[i, j] = 0;
             }
-
-            //Remove last , 
-            str = str.Substring(0, str.Length - 1);
-            str += "\n";
         }
-        str += "\n";
 
-        return str;
-    }
-
-    private string MatrixToString(int[,] matrix)
-    {
         string str = "";
+        int rows = matrix.GetLength(0);
+        int columns = matrix.GetLength(1);
 
-        for (int i = 0; i < matrix.GetLength(0); i++)
+        for (int i = 0; i < rows; i++)
         {
-            for (int j = 0; j < matrix.GetLength(1); j++)
+            for (int j = 0; j < columns; j++)
             {
-                str += String.Format("{0}, ", matrix[i, j]);
+                str += matrix[i, j] + ",";
             }
 
-            //Remove last , 
+            //Remove last ,
             str = str.Substring(0, str.Length - 1);
             str += "\n";
         }
-        str += "\n";
+        //remove last \n
+        str = str.Substring(0, str.Length - 1);
 
         return str;
     }
+
 }

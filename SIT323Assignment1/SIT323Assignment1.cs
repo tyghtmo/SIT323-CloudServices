@@ -207,51 +207,80 @@ namespace SIT323Assignment1
             string source = comboBox1.Text;
             if (source != null)
             {
-
+                //Download file stored on internet
                 string destination = Path.GetFileName(source);
                 WebClient webclient = new WebClient();
                 webclient.DownloadFile(source, destination);
 
-
+                //Initialise Configuration Data
                 string fullConfigPath = Path.GetDirectoryName(Application.ExecutablePath) + "\\" + destination;
                 ProcessConfig(fullConfigPath);
+                ConfigurationData ConfData = new ConfigurationData(aConfiguration)
+                {
+                    AlgorithmMaxRuntime = maxRuntime
+                };
 
                 //Send to ALG1
-                ConfigurationData ConfData = new ConfigurationData(aConfiguration);
-                ConfData.AlgorithmMaxRuntime = maxRuntime;
+                LocalALG1WebService.ServiceClient LocalALG1 = new LocalALG1WebService.ServiceClient();
+                LocalALG1.InnerChannel.OperationTimeout = new TimeSpan(0, 5, 0);
+                Task<string[]> ALG1Task = LocalALG1.GetAllocationsAsync(ConfData);
 
-                LocalALG1WebService.ServiceClient localWS = new LocalALG1WebService.ServiceClient();
-                localWS.InnerChannel.OperationTimeout = new TimeSpan(0, 5, 0);
-
+                //Send to ALG2
                 LocalALG2WebService.ServiceClient LocalALG2 = new LocalALG2WebService.ServiceClient();
+                LocalALG2.InnerChannel.OperationTimeout = new TimeSpan(0, 5, 0);
+                Task<string[]> ALG2Task = LocalALG2.GetAllocationsAsync(ConfData);
 
-                Task<string[]> ALG1Task = localWS.GetAllocationsAsync(ConfData);
-                Task<string> ALG2Task = LocalALG2.GetAllocationsAsync(ConfData);
-
+                //Loading Bar setup
                 int interval = 5 + ((Convert.ToInt32(numericUpDown1.Value) - 1) * 10);
-                while (!ALG1Task.IsCompleted)
+                while (!ALG2Task.IsCompleted)
                 {
                     Thread.Sleep(interval);
                     progressBar1.Increment(1);
                 }
                 
-                string[] ALG1allocations = ALG1Task.Result;
-                string ALG2allocations = ALG2Task.Result;
+                //Receive results from Web Services
+                List<string> returnedStrings = new List<string>();
+                returnedStrings.AddRange(ALG1Task.Result);
+                returnedStrings.AddRange(ALG2Task.Result);
+
+                //Create Allocations from returned strings
+                List<Allocation> returnedAllocations = new List<Allocation>();
+                int allocationIDCounter = 1;
+
+                foreach(string s in returnedStrings)
+                {
+                    List<string> matrixList = s.Split('\n').ToList();
+                    Allocation allocation = new Allocation(allocationIDCounter, matrixList);
+                    returnedAllocations.Add(allocation);
+                    allocationIDCounter++;
+                }
+
+                //TODO: Determine best set of allocations
+                foreach(Allocation al in returnedAllocations)
+                {
+                    if(al.ValidateAllocation() == false)
+                    {
+                        returnedAllocations.Remove(al);
+                    }
+                    al.CalculateTime(aConfiguration);
+                    al.CalculateEnergy(aConfiguration);
+                }
 
                 //Update GUI
                 label1.Text += fileValiditys;
                 int idCounter = 1;
 
-                
-                foreach(string s in ALG1allocations)
+                //Show best allocations on GUI
+                foreach(Allocation al in returnedAllocations)
                 {
-                    label1.Text += "Allocation ID = "+ idCounter + ", " + s + "\n";
+                    label1.Text += al.ToString() + "\n\n";
                     idCounter++;
                 }
             }
 
             
         }
+
 
     }
 }
