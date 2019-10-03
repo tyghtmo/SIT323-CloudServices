@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SIT323Assignment1
 {
-    public class Allocation
+    public class Allocation : IEquatable<Allocation>
     {
         #region Properties
         public int ID { get; set; }
@@ -305,6 +305,15 @@ namespace SIT323Assignment1
 
             AllocationEnergy = energy;
             return energy;
+        }
+
+        public bool Equals(Allocation other)
+        {
+            if (other == null) return false;
+
+            if (this.MatrixToString() == other.MatrixToString()) return true;
+
+            return false;
         }
         #endregion
     }

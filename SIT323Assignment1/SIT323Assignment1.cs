@@ -230,9 +230,14 @@ namespace SIT323Assignment1
                 LocalALG2.InnerChannel.OperationTimeout = new TimeSpan(0, 5, 0);
                 Task<string[]> ALG2Task = LocalALG2.GetAllocationsAsync(ConfData);
 
+                //Send to ALG3
+                LocalALG3WebService.ServiceClient LocalALG3 = new LocalALG3WebService.ServiceClient();
+                LocalALG3.InnerChannel.OperationTimeout = new TimeSpan(0, 5, 0);
+                Task<string[]> ALG3Task = LocalALG3.GetAllocationsAsync(ConfData);
+
                 //Loading Bar setup
                 int interval = 5 + ((Convert.ToInt32(numericUpDown1.Value) - 1) * 10);
-                while (!ALG2Task.IsCompleted)
+                while (!ALG3Task.IsCompleted)
                 {
                     Thread.Sleep(interval);
                     progressBar1.Increment(1);
@@ -242,6 +247,7 @@ namespace SIT323Assignment1
                 List<string> returnedStrings = new List<string>();
                 returnedStrings.AddRange(ALG1Task.Result);
                 returnedStrings.AddRange(ALG2Task.Result);
+                returnedStrings.AddRange(ALG3Task.Result);
 
                 //Create Allocations from returned strings
                 List<Allocation> returnedAllocations = new List<Allocation>();
@@ -256,22 +262,41 @@ namespace SIT323Assignment1
                 }
 
                 //TODO: Determine best set of allocations
+                double energy;
+                double bestEnergy = double.MaxValue;
+                List<Allocation> bestAllocations = new List<Allocation>();
+
                 foreach(Allocation al in returnedAllocations)
                 {
                     if(al.ValidateAllocation() == false)
                     {
                         returnedAllocations.Remove(al);
                     }
-                    al.CalculateTime(aConfiguration);
+                    energy = al.CalculateTime(aConfiguration);
                     al.CalculateEnergy(aConfiguration);
+
+                    if(energy < bestEnergy)
+                    {
+                        bestAllocations.Clear();
+                        bestAllocations.Add(al);
+                        bestEnergy = energy;
+                    }
+                    else if (energy == bestEnergy)
+                    {
+                        if (!bestAllocations.Contains(al))
+                        {
+                            bestAllocations.Add(al);
+                        }
+                    }
                 }
+
 
                 //Update GUI
                 label1.Text += fileValiditys;
                 int idCounter = 1;
 
                 //Show best allocations on GUI
-                foreach(Allocation al in returnedAllocations)
+                foreach(Allocation al in bestAllocations)
                 {
                     label1.Text += al.ToString() + "\n\n";
                     idCounter++;

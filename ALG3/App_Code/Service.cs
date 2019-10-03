@@ -72,6 +72,7 @@ public class ALG3Service : IService
                         }
                     }
 
+                    //TODO: make changes here
                     //sort by longest task and add to processor if under time limit
                     if (calculatedTasks.Count < tasks)
                     {
