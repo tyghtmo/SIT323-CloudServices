@@ -262,7 +262,6 @@ namespace SIT323Assignment1
                     await AwsALG3.GetAllocationsAsync(ConfData)
                 };
                 
-
                 //Close service clients
                 LocalALG1.Close();
                 LocalALG2.Close();
