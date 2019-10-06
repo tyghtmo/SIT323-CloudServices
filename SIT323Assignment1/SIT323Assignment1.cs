@@ -17,7 +17,7 @@ namespace SIT323Assignment1
     public partial class SIT323Assignment1Form : Form
     {
 
-        private ErrorForm errorForm { get; set; }
+        private ErrorForm ErrorForm { get; set; }
         public static List<string> CompleteErrorList = new List<string>();
         private TaskAllocations aTaskAllocation = new TaskAllocations();
         private Configuration aConfiguration = new Configuration();
@@ -251,32 +251,37 @@ namespace SIT323Assignment1
 
                 //Create Allocations from returned strings
                 List<Allocation> returnedAllocations = new List<Allocation>();
-                int allocationIDCounter = 1;
+                
 
                 foreach(string s in returnedStrings)
                 {
                     List<string> matrixList = s.Split('\n').ToList();
-                    Allocation allocation = new Allocation(allocationIDCounter, matrixList);
+                    Allocation allocation = new Allocation(matrixList);
                     returnedAllocations.Add(allocation);
-                    allocationIDCounter++;
                 }
 
-                //TODO: Determine best set of allocations
+                //Determine best set of allocations
                 double energy;
                 double bestEnergy = double.MaxValue;
                 List<Allocation> bestAllocations = new List<Allocation>();
+                int allocationIDCounter = 1;
 
-                foreach(Allocation al in returnedAllocations)
+                foreach (Allocation al in returnedAllocations)
                 {
                     if(al.ValidateAllocation() == false)
                     {
                         returnedAllocations.Remove(al);
                     }
-                    energy = al.CalculateTime(aConfiguration);
-                    al.CalculateEnergy(aConfiguration);
+                    al.CalculateTime(aConfiguration);
+                    energy = al.CalculateEnergy(aConfiguration);
 
                     if(energy < bestEnergy)
                     {
+                        //Reset Allocation ID's
+                        allocationIDCounter = 1;
+                        al.ID = allocationIDCounter;
+                        allocationIDCounter++;
+
                         bestAllocations.Clear();
                         bestAllocations.Add(al);
                         bestEnergy = energy;
@@ -285,6 +290,8 @@ namespace SIT323Assignment1
                     {
                         if (!bestAllocations.Contains(al))
                         {
+                            al.ID = allocationIDCounter;
+                            allocationIDCounter++;
                             bestAllocations.Add(al);
                         }
                     }

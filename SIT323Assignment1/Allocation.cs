@@ -32,6 +32,11 @@ namespace SIT323Assignment1
             AllocationMatrix = matrix;
         }
 
+        public Allocation(double[,] matrix)
+        {
+            AllocationMatrix = matrix;
+        }
+
         public Allocation(int id, List<string> matrix)
         {
             ID = id;
@@ -46,6 +51,24 @@ namespace SIT323Assignment1
                 for (int j = 0; j < columns; j++)
                 {
                     
+                    AllocationMatrix[i, j] = Double.Parse(substrings[j]);
+                }
+            }
+        }
+
+        public Allocation(List<string> matrix)
+        {
+
+            int rows = matrix.Count;
+            int columns = matrix[1].Replace(",", "").Length;
+            AllocationMatrix = new double[rows, columns];
+
+            for (int i = 0; i < rows; i++)
+            {
+                string[] substrings = matrix[i].Split(',');
+                for (int j = 0; j < columns; j++)
+                {
+
                     AllocationMatrix[i, j] = Double.Parse(substrings[j]);
                 }
             }

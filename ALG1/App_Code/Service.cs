@@ -60,13 +60,13 @@ public class ALG1Service : IService
             time = CalculateTime(allocation);
             energy = CalculateEnergy(allocation);
 
-            if(energy < bestEnergy && time < configurationData.ProgramMaxDuration)
+            if(energy < bestEnergy && time <= configurationData.ProgramMaxDuration)
             {
                 goodAllocations.Clear();
                 goodAllocations.Add(allocation);
                 bestEnergy = energy;
             }
-            else if(energy == bestEnergy && time < configurationData.ProgramMaxDuration)
+            else if(energy == bestEnergy && time <= configurationData.ProgramMaxDuration)
             {
                 goodAllocations.Add(allocation);
             }
