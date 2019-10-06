@@ -72,23 +72,31 @@ public class ALG3Service : IService
                         }
                     }
 
+                    var orderedDict = selectedProcessorTasks.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+
                     //TODO: make changes here
                     //sort by longest task and add to processor if under time limit
-                    if (calculatedTasks.Count < tasks)
+                    for (int i = 0; i < orderedDict.Count(); i++)
                     {
-                        double maxValue = selectedProcessorTasks.Values.Max();
-                        int maxValueKey = selectedProcessorTasks.FirstOrDefault(x => x.Value == maxValue).Key;
-
-                        if (processorRuntime + maxValue < configurationData.ProgramMaxDuration)
+                        if (calculatedTasks.Count < tasks)
                         {
-                            allocation[selectedProcessor, maxValueKey - 1] = maxValue;
-                            selectedProcessorTasks.Remove(maxValueKey);
-                            calculatedTasks.Add(maxValueKey);
-                            processorRuntime += maxValue;
+
+                            if (processorRuntime + orderedDict.ElementAt(i).Value < configurationData.ProgramMaxDuration)
+                            {
+                                allocation[selectedProcessor, orderedDict.ElementAt(i).Key - 1] = orderedDict.ElementAt(i).Value;
+                                selectedProcessorTasks.Remove(orderedDict.ElementAt(i).Key);
+                                
+
+                                calculatedTasks.Add(orderedDict.ElementAt(i).Key);
+                                processorRuntime += orderedDict.ElementAt(i).Value;
+
+                                //Change dic value to 0
+                                orderedDict[orderedDict.ElementAt(i).Key] = 0;
+                            }
                         }
                     }
 
-
+                    /*
                     //sort by shortest task and add to processor if under time limit
 
                     if (calculatedTasks.Count < tasks)
@@ -104,7 +112,7 @@ public class ALG3Service : IService
                             processorRuntime += minValue;
                         }
                     }
-
+                    */
 
                 }
 
