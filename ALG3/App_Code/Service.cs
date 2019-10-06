@@ -23,9 +23,14 @@ public class ALG3Service : IService
         double[,] taskProTimes = GetTaskProcessorTimes();
         allocationList = HeuristicAlgorithm(taskProTimes);
 
+        //Get Server address
+        string serverAddress = System.Web.HttpContext.Current.Request.ServerVariables["LOCAL_ADDR"];
+        allocationList.Insert(0, serverAddress);
+
         return allocationList;
     }
 
+    //This algorithm adds tasks to processors starting from the longest task and working backwards till no more tasks can be added
     private List<string> HeuristicAlgorithm(double[,] taskProcessorTimes)
     {
         Stopwatch stopwatch = new Stopwatch();
@@ -74,8 +79,7 @@ public class ALG3Service : IService
 
                     var orderedDict = selectedProcessorTasks.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
 
-                    //TODO: make changes here
-                    //sort by longest task and add to processor if under time limit
+                    //Adds longest task then adds the next longest if under time limit
                     for (int i = 0; i < orderedDict.Count(); i++)
                     {
                         if (calculatedTasks.Count < tasks)
@@ -96,26 +100,7 @@ public class ALG3Service : IService
                         }
                     }
 
-                    /*
-                    //sort by shortest task and add to processor if under time limit
-
-                    if (calculatedTasks.Count < tasks)
-                    {
-                        double minValue = selectedProcessorTasks.Values.Min();
-                        int minValueKey = selectedProcessorTasks.FirstOrDefault(x => x.Value == minValue).Key;
-
-                        if (processorRuntime + minValue < configurationData.ProgramMaxDuration)
-                        {
-                            allocation[selectedProcessor, minValueKey - 1] = minValue;
-                            selectedProcessorTasks.Remove(minValueKey);
-                            calculatedTasks.Add(minValueKey);
-                            processorRuntime += minValue;
-                        }
-                    }
-                    */
-
                 }
-
 
                 //Get next processor randomly excluding already calculated processors
                 calculatedProcessors.Add(selectedProcessor);

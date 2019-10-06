@@ -22,6 +22,7 @@ namespace SIT323Assignment1
         private TaskAllocations aTaskAllocation = new TaskAllocations();
         private Configuration aConfiguration = new Configuration();
         string fileValiditys = "";
+        public static List<string> endpointAdresses = new List<string>();
 
 
         //constants
@@ -65,7 +66,7 @@ namespace SIT323Assignment1
 
             DialogResult result;
             result = openFileDialog1.ShowDialog();
-            if(result == DialogResult.OK)
+            if (result == DialogResult.OK)
             {
                 ProcessTAN();
             }
@@ -73,7 +74,7 @@ namespace SIT323Assignment1
 
         private void ProcessTAN()
         {
-            
+
             //Process TAN file
             CompleteErrorList.Add(startTanFile + openFileDialog1.SafeFileName);
             TaskAllocations.TryParse(openFileDialog1.FileName, out aTaskAllocation);
@@ -163,37 +164,37 @@ namespace SIT323Assignment1
             CompleteErrorList.Add(startAllocations);
             foreach (Allocation al in aTaskAllocation.SetOfAllocations)
             {
-                
 
-                    List<string> errors = new List<string>();
 
-                    //get time
+                List<string> errors = new List<string>();
 
-                    double time = al.CalculateTime(aConfiguration, out errors);
-                    UpdateErrors(errors);
-                    string timeString = time.ToString("0.00");
+                //get time
 
-                    //get energy
-                    double energy = al.CalculateEnergy(aConfiguration, out errors);
-                    UpdateErrors(errors);
+                double time = al.CalculateTime(aConfiguration, out errors);
+                UpdateErrors(errors);
+                string timeString = time.ToString("0.00");
 
-                    string energyString = energy.ToString("0.00");
+                //get energy
+                double energy = al.CalculateEnergy(aConfiguration, out errors);
+                UpdateErrors(errors);
 
-                    if (energyMarker == 0) energyMarker = energy;
-                    if (energy != energyMarker) errors.Add(string.Format(diffEnergyError, al.ID, al.AllocationEnergy, energyMarker));
-                    UpdateErrors(errors);
+                string energyString = energy.ToString("0.00");
 
-                    //update text
-                    label1.Text += string.Format(allocationTimeEnergyDisplay, al.ID, timeString, energyString);
-                    label1.Text += al.MatrixToString();
-                
+                if (energyMarker == 0) energyMarker = energy;
+                if (energy != energyMarker) errors.Add(string.Format(diffEnergyError, al.ID, al.AllocationEnergy, energyMarker));
+                UpdateErrors(errors);
+
+                //update text
+                label1.Text += string.Format(allocationTimeEnergyDisplay, al.ID, timeString, energyString);
+                label1.Text += al.MatrixToString();
+
             }
 
             CompleteErrorList.Add(endAllocations);
             allocationsToolStripMenuItem.Enabled = false;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             progressBar1.Value = 0;
             decimal maxRuntime = numericUpDown1.Value * 1000;
@@ -220,45 +221,77 @@ namespace SIT323Assignment1
                     AlgorithmMaxRuntime = maxRuntime
                 };
 
-                //Send to ALG1
+                //Setup Local WCF Services
                 LocalALG1WebService.ServiceClient LocalALG1 = new LocalALG1WebService.ServiceClient();
                 LocalALG1.InnerChannel.OperationTimeout = new TimeSpan(0, 5, 0);
-                Task<string[]> ALG1Task = LocalALG1.GetAllocationsAsync(ConfData);
 
-                //Send to ALG2
                 LocalALG2WebService.ServiceClient LocalALG2 = new LocalALG2WebService.ServiceClient();
                 LocalALG2.InnerChannel.OperationTimeout = new TimeSpan(0, 5, 0);
-                Task<string[]> ALG2Task = LocalALG2.GetAllocationsAsync(ConfData);
 
-                //Send to ALG3
                 LocalALG3WebService.ServiceClient LocalALG3 = new LocalALG3WebService.ServiceClient();
                 LocalALG3.InnerChannel.OperationTimeout = new TimeSpan(0, 5, 0);
-                Task<string[]> ALG3Task = LocalALG3.GetAllocationsAsync(ConfData);
+
+                //Setup AWS WCF Services
+                AwsALG1WebService.ServiceClient AwsALG1 = new AwsALG1WebService.ServiceClient();
+                AwsALG1.InnerChannel.OperationTimeout = new TimeSpan(0, 5, 0);
+
+                AwsALG2WebService.ServiceClient AwsALG2 = new AwsALG2WebService.ServiceClient();
+                AwsALG2.InnerChannel.OperationTimeout = new TimeSpan(0, 5, 0);
+
+                AwsALG3WebService.ServiceClient AwsALG3 = new AwsALG3WebService.ServiceClient();
+                AwsALG3.InnerChannel.OperationTimeout = new TimeSpan(0, 5, 0);
+
 
                 //Loading Bar setup
                 int interval = 5 + ((Convert.ToInt32(numericUpDown1.Value) - 1) * 10);
-                while (!ALG3Task.IsCompleted)
+                while (progressBar1.Value < 100)
                 {
                     Thread.Sleep(interval);
                     progressBar1.Increment(1);
                 }
-                
+
+
                 //Receive results from Web Services
-                List<string> returnedStrings = new List<string>();
-                returnedStrings.AddRange(ALG1Task.Result);
-                returnedStrings.AddRange(ALG2Task.Result);
-                returnedStrings.AddRange(ALG3Task.Result);
+                List<string[]> returnedStrings = new List<string[]>
+                {
+                    //await LocalALG1.GetAllocationsAsync(ConfData),
+                    //await LocalALG2.GetAllocationsAsync(ConfData),
+                    //await LocalALG3.GetAllocationsAsync(ConfData),
+                    await AwsALG1.GetAllocationsAsync(ConfData),
+                    await AwsALG2.GetAllocationsAsync(ConfData),
+                    await AwsALG3.GetAllocationsAsync(ConfData)
+                };
+                
+
+                //Close service clients
+                LocalALG1.Close();
+                LocalALG2.Close();
+                LocalALG3.Close();
+                AwsALG1.Close();
+                AwsALG2.Close();
+                AwsALG3.Close();
 
                 //Create Allocations from returned strings
                 List<Allocation> returnedAllocations = new List<Allocation>();
-                
+                endpointAdresses.Clear();
 
-                foreach(string s in returnedStrings)
+                foreach (string[] stringArray in returnedStrings)
                 {
-                    List<string> matrixList = s.Split('\n').ToList();
-                    Allocation allocation = new Allocation(matrixList);
-                    returnedAllocations.Add(allocation);
+                    List<string> stringList = stringArray.ToList();
+                    endpointAdresses.Add(stringList[0]);
+                    stringList.RemoveAt(0);
+
+                    foreach (string s in stringList)
+                    {
+                        List<string> matrixList = s.Split('\n').ToList();
+                        Allocation allocation = new Allocation(matrixList);
+                        returnedAllocations.Add(allocation);
+                    }
                 }
+
+                //Display endpoint address's in popup
+                EndpointForm endpointForm = new EndpointForm();
+                endpointForm.Show();
 
                 //Determine best set of allocations
                 double energy;
@@ -268,14 +301,14 @@ namespace SIT323Assignment1
 
                 foreach (Allocation al in returnedAllocations)
                 {
-                    if(al.ValidateAllocation() == false)
+                    if (al.ValidateAllocation() == false)
                     {
                         returnedAllocations.Remove(al);
                     }
                     al.CalculateTime(aConfiguration);
                     energy = al.CalculateEnergy(aConfiguration);
 
-                    if(energy < bestEnergy)
+                    if (energy < bestEnergy)
                     {
                         //Reset Allocation ID's
                         allocationIDCounter = 1;
@@ -303,14 +336,14 @@ namespace SIT323Assignment1
                 int idCounter = 1;
 
                 //Show best allocations on GUI
-                foreach(Allocation al in bestAllocations)
+                foreach (Allocation al in bestAllocations)
                 {
                     label1.Text += al.ToString() + "\n\n";
                     idCounter++;
                 }
             }
 
-            
+
         }
 
 

@@ -16,12 +16,17 @@ public class ALG1Service : IService
     public ConfigurationData configurationData;
 
 
-	public List<string> GetAllocations(ConfigurationData configData)
+    public List<string> GetAllocations(ConfigurationData configData)
 	{
         List<string> allocationList = new List<string>();
         configurationData = configData;
+
         double[,] taskProTimes = GetTaskProcessorTimes();
         allocationList = RandomAllocation(taskProTimes);
+
+        //Get Server address
+        string serverAddress = System.Web.HttpContext.Current.Request.ServerVariables["LOCAL_ADDR"];
+        allocationList.Insert(0, serverAddress);
 
         return allocationList;
 	}

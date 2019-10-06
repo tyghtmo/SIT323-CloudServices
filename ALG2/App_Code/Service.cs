@@ -23,6 +23,10 @@ public class ALG2Service : IService
         double[,] taskProTimes = GetTaskProcessorTimes();
         allocationList = HeuristicAlgorithm(taskProTimes);
 
+        //Get Server address
+        string serverAddress = System.Web.HttpContext.Current.Request.ServerVariables["LOCAL_ADDR"];
+        allocationList.Insert(0, serverAddress);
+
         return allocationList;
     }
 
